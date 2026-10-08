@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: QuickTasker 1.60.0\n"
+"Project-Id-Version: QuickTasker 1.61.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quicktasker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T12:25:28+00:00\n"
+"POT-Creation-Date: 2026-10-08T17:32:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -44,16 +44,16 @@ msgid "WordPress users who are not administrators now only see the boards they h
 msgstr ""
 
 #: php/actions.php:85
-#: php/actions.php:128
+#: php/actions.php:129
 msgid "Add users to boards"
 msgstr ""
 
 #: php/actions.php:86
-#: php/actions.php:129
+#: php/actions.php:130
 msgid "Dismiss"
 msgstr ""
 
-#: php/actions.php:127
+#: php/actions.php:128
 msgid "QuickTasker users now only see tasks on the boards they have been added to. Until you add them to boards, they see no tasks in the tasks app, and automations that assign them to tasks do nothing."
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:694
-#: php/api/user-page-api.php:1055
+#: php/api/user-page-api.php:1052
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
@@ -139,49 +139,49 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1362
-#: php/api/user-page-api.php:1163
+#: php/api/user-page-api.php:1160
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1364
-#: php/api/user-page-api.php:1165
+#: php/api/user-page-api.php:1162
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
 
 #. translators: %1$s = assigner name, %2$s = task name
-#: php/api/admin-api.php:2078
+#: php/api/admin-api.php:2081
 #, php-format
 msgid "%1$s assigned you to task \"%2$s\""
 msgstr ""
 
 #. translators: %1$s = unassigner name, %2$s = task name
-#: php/api/admin-api.php:2191
+#: php/api/admin-api.php:2194
 #, php-format
 msgid "%1$s unassigned you from task \"%2$s\""
 msgstr ""
 
-#: php/api/admin-api.php:3634
+#: php/api/admin-api.php:3637
 msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:455
+#: php/api/user-page-api.php:452
 #: php/services/CommentService.php:115
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:824
+#: php/api/user-page-api.php:821
 #, php-format
 msgid "A user was assigned to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:943
+#: php/api/user-page-api.php:940
 #, php-format
 msgid "A user was unassigned from task \"%s\""
 msgstr ""
@@ -2429,6 +2429,10 @@ msgstr ""
 
 #: build/app.js:1
 msgid "You don't have permission to delete users"
+msgstr ""
+
+#: build/app.js:1
+msgid "This QuickTasker has been added to boards you have not been added to"
 msgstr ""
 
 #: build/app.js:1

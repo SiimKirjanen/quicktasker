@@ -16,32 +16,50 @@ if (!class_exists('WPQT\User\UserService')) {
         /**
          * Retrieves QuickTasker users for the current admin app viewer.
          *
-         * A QuickTasker's page hash lets anyone set the password of a user who has
-         * none yet, so it is only included for users allowed to manage QuickTaskers.
-         * Each user's boards are included as pipeline_ids, so the admin app can tell
-         * which boards they can be assigned on. Like assigned tasks, only boards the
-         * viewer can access are included.
+         * Each user's can_manage tells if the viewer can manage them, see
+         * PermissionService::canManageQuicktaskerUser(). A QuickTasker's page hash lets
+         * anyone set the password of a user who has none yet, so it is only included
+         * for users the viewer can manage. Each user's boards are included as
+         * pipeline_ids, so the admin app can tell which boards they can be assigned on.
+         * Like assigned tasks, only boards the viewer can access are included.
          *
          * @return array List of QuickTasker users.
          */
         public function getUsersForCurrentViewer()
         {
             $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
-            $viewerPipelineIds = $pipelineAccessService->getAccessiblePipelineIds(get_current_user_id());
-            $users = $pipelineAccessService->addPipelineAccessToQuicktaskerUsers(
-                ServiceLocator::get('UserRepository')->getUsers($viewerPipelineIds),
-                $viewerPipelineIds
-            );
+            $viewerId = get_current_user_id();
+            $viewerPipelineIds = $pipelineAccessService->getAccessiblePipelineIds($viewerId);
+            $users = ServiceLocator::get('UserRepository')->getUsers($viewerPipelineIds);
+            $users = $pipelineAccessService->addQuicktaskerUserManageability($viewerId, $users);
+            $users = $pipelineAccessService->addPipelineAccessToQuicktaskerUsers($users, $viewerPipelineIds);
 
-            if (PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints()) {
-                return $users;
+            return $this->limitQuicktaskerUsersForViewer($users);
+        }
+
+        /**
+         * Limits QuickTasker users with can_manage set to what the current viewer may see.
+         *
+         * can_manage also requires the manage users capability, and the page hash is removed
+         * from users the viewer can't manage.
+         *
+         * @param array $users QuickTasker user objects with can_manage set by
+         *                     PipelineAccessService::addQuicktaskerUserManageability().
+         * @return array The same user objects.
+         */
+        public function limitQuicktaskerUsersForViewer($users)
+        {
+            $canManageUsers = PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+
+            foreach ($users as $user) {
+                $user->can_manage = $canManageUsers && $user->can_manage;
+
+                if (!$user->can_manage) {
+                    unset($user->page_hash);
+                }
             }
 
-            return array_map(function ($user) {
-                unset($user->page_hash);
-
-                return $user;
-            }, $users);
+            return $users;
         }
 
         /**

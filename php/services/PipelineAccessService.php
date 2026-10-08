@@ -287,6 +287,60 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
         }
 
         /**
+         * Checks if a WordPress user's board access lets them manage a QuickTasker user, like resetting their password
+         * or opening their tasks app link.
+         *
+         * Managing a QuickTasker user gives access to their tasks app, and so to their boards. Users who can't access
+         * every board can only manage QuickTasker users whose boards they can all access. Capabilities are not checked.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param int $quicktaskerUserId The QuickTasker user ID.
+         * @return bool True if the WordPress user can access every board the QuickTasker user has been added to.
+         */
+        public function canAccessQuicktaskerUserPipelines($wpUserId, $quicktaskerUserId)
+        {
+            return $this->containsAllPipelineIds(
+                $this->getAccessiblePipelineIds($wpUserId),
+                ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserId($quicktaskerUserId)
+            );
+        }
+
+        /**
+         * Adds whether a WordPress user's board access lets them manage each QuickTasker user, as can_manage.
+         *
+         * See canAccessQuicktaskerUserPipelines(). Capabilities are not checked.
+         *
+         * @param int $wpUserId The WordPress user ID.
+         * @param array $users QuickTasker user objects with an id property.
+         * @return array The same user objects.
+         */
+        public function addQuicktaskerUserManageability($wpUserId, $users)
+        {
+            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
+            $pipelineIdsByUserId = null === $accessiblePipelineIds ? [] : ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserIds(
+                array_map('intval', array_column($users, 'id'))
+            );
+
+            foreach ($users as $user) {
+                $user->can_manage = $this->containsAllPipelineIds($accessiblePipelineIds, $pipelineIdsByUserId[(int) $user->id] ?? []);
+            }
+
+            return $users;
+        }
+
+        /**
+         * Checks if some boards are all among the given boards.
+         *
+         * @param int[]|null $pipelineIds The board IDs, or null for every board.
+         * @param int[] $requiredPipelineIds The board IDs that must be included.
+         * @return bool True if every required board is included.
+         */
+        private function containsAllPipelineIds($pipelineIds, $requiredPipelineIds)
+        {
+            return null === $pipelineIds || empty(array_diff($requiredPipelineIds, $pipelineIds));
+        }
+
+        /**
          * Keeps only the visible boards of a user's boards.
          *
          * @param int[] $pipelineIds The user's board IDs.

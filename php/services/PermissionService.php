@@ -67,6 +67,35 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         }
 
         /**
+         * Checks if the current user can manage a QuickTasker user, like editing them, resetting their password
+         * or changing their status.
+         *
+         * Besides the manage users capability, the user must be able to access every board the QuickTasker user
+         * has been added to, as managing them gives access to their tasks app.
+         *
+         * @param int $quicktaskerUserId The QuickTasker user ID.
+         * @return bool True if the current user can manage the QuickTasker user.
+         */
+        public static function canManageQuicktaskerUser($quicktaskerUserId)
+        {
+            return self::hasRequiredParmissionsForPrivateAPIUsersEndpoints()
+                && ServiceLocator::get('PipelineAccessService')->canAccessQuicktaskerUserPipelines(get_current_user_id(), $quicktaskerUserId);
+        }
+
+        /**
+         * Checks if the current user can delete a QuickTasker user.
+         *
+         * See canManageQuicktaskerUser().
+         *
+         * @param int $quicktaskerUserId The QuickTasker user ID.
+         * @return bool True if the current user can delete the QuickTasker user.
+         */
+        public static function canDeleteQuicktaskerUser($quicktaskerUserId)
+        {
+            return self::hasRequiredPermissionsForDeletingQuickTaskerUsers() && self::canManageQuicktaskerUser($quicktaskerUserId);
+        }
+
+        /**
          * Checks if the current user can view and change the QuickTasker permissions of WordPress users.
          *
          * Granting plugin permissions is limited to WordPress administrators so that

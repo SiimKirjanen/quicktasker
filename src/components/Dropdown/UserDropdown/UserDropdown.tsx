@@ -21,6 +21,7 @@ import {
 } from "../../../constants";
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { useDeleteUserPermission } from "../../../hooks/useDeleteUserPermission";
+import { useManageQuicktaskerPermission } from "../../../hooks/useManageQuicktaskerPermission";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { User, UserTypes } from "../../../types/user";
@@ -37,6 +38,8 @@ type Props = {
 function UserDropdown({ user }: Props) {
   const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
     useDeleteUserPermission();
+  const { canManageQuicktasker, manageQuicktaskerDisabledReason } =
+    useManageQuicktaskerPermission(user);
   const { modalDispatch } = useContext(ModalContext);
   const { userDispatch } = useContext(UserContext);
   const { changeUserStatus, deleteUser, resetUserPassword, unbanUser } =
@@ -126,11 +129,17 @@ function UserDropdown({ user }: Props) {
         text={__("Edit user", "quicktasker")}
         icon={<PencilSquareIcon className="wpqt-icon-green wpqt-size-4" />}
         onClick={openEditUserModal}
+        disabled={!canManageQuicktasker}
+        id={`user-dropdown-${user.id}-edit`}
+        tooltipText={manageQuicktaskerDisabledReason}
       />
 
       {user.has_password && (
         <WPQTDropdownItem
           text={__("Reset password", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          id={`user-dropdown-${user.id}-reset-password`}
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isResettingPw}
           icon={<KeyIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={async (e) => {
@@ -151,6 +160,9 @@ function UserDropdown({ user }: Props) {
       {userIsActive && (
         <WPQTDropdownItem
           text={__("Disable user", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          id={`user-dropdown-${user.id}-disable`}
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-red wpqt-size-4" />}
           onClick={(e: React.MouseEvent) => {
@@ -164,6 +176,9 @@ function UserDropdown({ user }: Props) {
       {!userIsActive && (
         <WPQTDropdownItem
           text={__("Activate user", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          id={`user-dropdown-${user.id}-activate`}
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isChangingStatus}
           icon={<PowerIcon className="wpqt-icon-green wpqt-size-4" />}
           onClick={(e: React.MouseEvent) => {
@@ -177,6 +192,9 @@ function UserDropdown({ user }: Props) {
       {user.is_banned && (
         <WPQTDropdownItem
           text={__("Unban user", "quicktasker")}
+          disabled={!canManageQuicktasker}
+          id={`user-dropdown-${user.id}-unban`}
+          tooltipText={manageQuicktaskerDisabledReason}
           loading={isUnbanning}
           icon={<NoSymbolIcon className="wpqt-icon-green wpqt-size-4" />}
           onClick={async (e: React.MouseEvent) => {
@@ -207,9 +225,11 @@ function UserDropdown({ user }: Props) {
             loading={isDeleting}
             icon={<TrashIcon className="wpqt-icon-red wpqt-size-4" />}
             onClick={onClick}
-            disabled={!isUserAllowedToDeleteUsers}
+            disabled={!isUserAllowedToDeleteUsers || !canManageQuicktasker}
             id={`user-dropdown-${user.id}-delete`}
-            tooltipText={deleteUserDisabledReason}
+            tooltipText={
+              deleteUserDisabledReason ?? manageQuicktaskerDisabledReason
+            }
           />
         )}
       </WPQTConfirmTooltip>

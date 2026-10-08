@@ -19,6 +19,7 @@ import {
 import { useUserActions } from "../../../hooks/actions/useUserActions";
 import { useDeleteUserPermission } from "../../../hooks/useDeleteUserPermission";
 import { useLoadingStates } from "../../../hooks/useLoadingStates";
+import { useManageQuicktaskerPermission } from "../../../hooks/useManageQuicktaskerPermission";
 import { useNavigation } from "../../../hooks/useNavigation";
 import { ModalContext } from "../../../providers/ModalContextProvider";
 import { UserContext } from "../../../providers/UserContextProvider";
@@ -40,6 +41,8 @@ const UserModalContent = () => {
   } = useContext(ModalContext);
   const { isUserAllowedToDeleteUsers, deleteUserDisabledReason } =
     useDeleteUserPermission();
+  const { canManageQuicktasker, manageQuicktaskerDisabledReason } =
+    useManageQuicktaskerPermission(userToEdit ?? {});
   const [isActiveUser, setIsActiveUser] = useState(false);
   const [isBannedUser, setIsBannedUser] = useState(false);
   const [isUnbanLoading, setIsUnbanLoading] = useState(false);
@@ -93,6 +96,7 @@ const UserModalContent = () => {
                       <AutoSaveInput
                         isAutoFocus={true}
                         value={userToEdit.name}
+                        disabled={!canManageQuicktasker}
                         wrapperClassName="wpqt-w-full"
                         className="wpqt-w-full"
                         onChange={async (value) => {
@@ -114,6 +118,7 @@ const UserModalContent = () => {
                       <AutoSaveTextarea
                         value={userToEdit.description}
                         className="wpqt-w-full"
+                        disabled={!canManageQuicktasker}
                         onChange={async (value) => {
                           const { success, user: updatedUser } = await editUser(
                             userToEdit.id,
@@ -184,6 +189,9 @@ const UserModalContent = () => {
             <WPQTIconButton
               icon={<KeyIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Reset password", "quicktasker")}
+              disabled={!canManageQuicktasker}
+              tooltipId="user-modal-reset-password"
+              tooltipText={manageQuicktaskerDisabledReason}
               loading={isResetPWLoading}
               onClick={async () => {
                 setIsResetPWLoading(true);
@@ -202,6 +210,9 @@ const UserModalContent = () => {
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-green wpqt-size-5" />}
               text={__("Activate user", "quicktasker")}
+              disabled={!canManageQuicktasker}
+              tooltipId="user-modal-activate"
+              tooltipText={manageQuicktaskerDisabledReason}
               loading={isActivateLoading}
               onClick={async () => {
                 setIsActivateLoading(true);
@@ -220,6 +231,9 @@ const UserModalContent = () => {
             <WPQTIconButton
               icon={<PowerIcon className="wpqt-icon-red wpqt-size-5" />}
               text={__("Disable user", "quicktasker")}
+              disabled={!canManageQuicktasker}
+              tooltipId="user-modal-disable"
+              tooltipText={manageQuicktaskerDisabledReason}
               loading={isActivateLoading}
               onClick={async () => {
                 setIsActivateLoading(true);
@@ -238,6 +252,9 @@ const UserModalContent = () => {
             <WPQTIconButton
               icon={<NoSymbolIcon className="wpqt-icon-green wpqt-size-5" />}
               text={__("Unban user", "quicktasker")}
+              disabled={!canManageQuicktasker}
+              tooltipId="user-modal-unban"
+              tooltipText={manageQuicktaskerDisabledReason}
               loading={isUnbanLoading}
               onClick={async () => {
                 setIsUnbanLoading(true);
@@ -278,9 +295,11 @@ const UserModalContent = () => {
                 text={__("Delete user", "quicktasker")}
                 loading={isDeleteLoading}
                 onClick={onClick}
-                disabled={!isUserAllowedToDeleteUsers}
+                disabled={!isUserAllowedToDeleteUsers || !canManageQuicktasker}
                 tooltipId="user-modal-delete"
-                tooltipText={deleteUserDisabledReason}
+                tooltipText={
+                  deleteUserDisabledReason ?? manageQuicktaskerDisabledReason
+                }
                 className="wpqt-w-full"
               />
             )}

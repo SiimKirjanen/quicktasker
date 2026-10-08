@@ -61,15 +61,18 @@ function UserDetails({ data }: Props) {
         }
       />
 
-      <UserDetailItem
-        label={__("User Page", "quicktasker")}
-        value={
-          <a href={userPageLink} rel="noreferrer" target="_blank">
-            {userPageLink}
-          </a>
-        }
-        icon={<EyeIcon className={`wpqt-size-5 wpqt-icon-blue`} />}
-      />
+      {/* The link is left out for QuickTaskers the viewer can't manage. */}
+      {data.page_hash && (
+        <UserDetailItem
+          label={__("User Page", "quicktasker")}
+          value={
+            <a href={userPageLink} rel="noreferrer" target="_blank">
+              {userPageLink}
+            </a>
+          }
+          icon={<EyeIcon className={`wpqt-size-5 wpqt-icon-blue`} />}
+        />
+      )}
     </div>
   );
 }

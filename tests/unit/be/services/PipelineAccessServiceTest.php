@@ -434,6 +434,50 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertSame([1, 3], $users[0]->pipeline_ids);
     }
 
+    public function test_administrator_can_manage_every_quicktasker_user()
+    {
+        $this->quicktaskerBoardIds[5] = [1, 2];
+
+        $this->assertTrue($this->service->canAccessQuicktaskerUserPipelines(self::ADMIN_USER_ID, 5));
+    }
+
+    public function test_limited_user_can_manage_only_quicktasker_users_whose_boards_they_can_all_access()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
+        $this->quicktaskerBoardIds[5] = [1, 2];
+        $this->quicktaskerBoardIds[6] = [1, 3];
+
+        $this->assertTrue($this->service->canAccessQuicktaskerUserPipelines(self::LIMITED_USER_ID, 5));
+        $this->assertFalse($this->service->canAccessQuicktaskerUserPipelines(self::LIMITED_USER_ID, 6));
+    }
+
+    public function test_limited_user_can_manage_quicktasker_users_without_boards()
+    {
+        $this->assertTrue($this->service->canAccessQuicktaskerUserPipelines(self::LIMITED_USER_ID, 5));
+    }
+
+    public function test_adds_whether_each_quicktasker_user_can_be_managed()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1];
+        $this->quicktaskerBoardIds[5] = [1];
+        $this->quicktaskerBoardIds[6] = [1, 2];
+        $users = [(object) ['id' => '5'], (object) ['id' => '6'], (object) ['id' => '7']];
+
+        $users = $this->service->addQuicktaskerUserManageability(self::LIMITED_USER_ID, $users);
+
+        $this->assertSame([true, false, true], array_column($users, 'can_manage'));
+    }
+
+    public function test_administrator_can_manage_each_quicktasker_user()
+    {
+        $this->quicktaskerBoardIds[5] = [1, 2];
+        $users = [(object) ['id' => '5']];
+
+        $users = $this->service->addQuicktaskerUserManageability(self::ADMIN_USER_ID, $users);
+
+        $this->assertTrue($users[0]->can_manage);
+    }
+
     public function test_lists_only_visible_boards_of_wp_users()
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];

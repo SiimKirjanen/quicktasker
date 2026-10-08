@@ -1863,6 +1863,9 @@ if (!function_exists('wpqt_register_api_routes')) {
                         if (!$user) {
                             throw new WPQTException('Failed to get user data', true);
                         }
+                        [$user] = $userService->limitQuicktaskerUsersForViewer(
+                            ServiceLocator::get('PipelineAccessService')->addQuicktaskerUserManageability(get_current_user_id(), [$user])
+                        );
                         $user->has_password = $userService->checkIfUserHasPassword($data['id']);
                         $user->setup_completed = $userPageService->checkIfUserPageSetupCompleted($data['id']);
 
@@ -2284,8 +2287,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::canManageQuicktaskerUser($request['id']);
                 },
                 'args' => [
                     'id' => [
@@ -2340,8 +2343,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::canManageQuicktaskerUser($request['id']);
                 },
                 'args' => [
                     'id' => [
@@ -2386,8 +2389,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::canManageQuicktaskerUser($request['id']);
                 },
                 'args' => [
                     'id' => [
@@ -2436,8 +2439,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints();
+                'permission_callback' => function ($request) {
+                    return PermissionService::canManageQuicktaskerUser($request['id']);
                 },
                 'args' => [
                     'id' => [
@@ -2578,8 +2581,8 @@ if (!function_exists('wpqt_register_api_routes')) {
                         return ServiceLocator::get('ErrorHandlerService')->handlePrivateApiError($e);
                     }
                 },
-                'permission_callback' => function () {
-                    return PermissionService::hasRequiredPermissionsForDeletingQuickTaskerUsers();
+                'permission_callback' => function ($request) {
+                    return PermissionService::canDeleteQuicktaskerUser($request['id']);
                 },
                 'args' => [
                     'id' => [

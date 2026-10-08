@@ -55,9 +55,17 @@ class UserServiceUsersForViewerTest extends TestCase
         ServiceLocator::register('UserRepository', $userRepoMock);
 
         $pipelineAccessServiceMock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(['getAccessiblePipelineIds', 'addPipelineAccessToQuicktaskerUsers'])
+            ->addMethods(['getAccessiblePipelineIds', 'addPipelineAccessToQuicktaskerUsers', 'addQuicktaskerUserManageability'])
             ->getMock();
         $pipelineAccessServiceMock->method('getAccessiblePipelineIds')->willReturn([3]);
+        // The second user is also on a board the viewer can't access.
+        $pipelineAccessServiceMock->method('addQuicktaskerUserManageability')->willReturnCallback(function ($wpUserId, $users) {
+            foreach ($users as $user) {
+                $user->can_manage = '1' === $user->id;
+            }
+
+            return $users;
+        });
         $pipelineAccessServiceMock->method('addPipelineAccessToQuicktaskerUsers')->willReturnCallback(function ($users, $visiblePipelineIds) {
             $this->visiblePipelineIds = $visiblePipelineIds;
 
@@ -77,13 +85,15 @@ class UserServiceUsersForViewerTest extends TestCase
         unset($GLOBALS['wpqt_test_current_user_caps']);
     }
 
-    public function test_getUsersForCurrentViewer_includes_page_hash_for_user_managers()
+    public function test_getUsersForCurrentViewer_includes_page_hash_only_for_users_the_manager_can_manage()
     {
         $GLOBALS['wpqt_test_current_user_caps'] = [WP_QUICKTASKER_ADMIN_ROLE, WP_QUICKTASKER_ADMIN_ROLE_MANAGE_USERS];
 
         $users = $this->service->getUsersForCurrentViewer();
 
-        $this->assertSame(['aaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbb'], array_column($users, 'page_hash'));
+        $this->assertSame([true, false], array_column($users, 'can_manage'));
+        $this->assertSame('aaaaaaaaaaaaaaaa', $users[0]->page_hash);
+        $this->assertFalse(property_exists($users[1], 'page_hash'));
     }
 
     public function test_getUsersForCurrentViewer_omits_page_hash_without_manage_users()
@@ -95,6 +105,7 @@ class UserServiceUsersForViewerTest extends TestCase
         $this->assertCount(2, $users);
         foreach ($users as $user) {
             $this->assertFalse(property_exists($user, 'page_hash'));
+            $this->assertFalse($user->can_manage);
         }
         $this->assertSame(['First', 'Second'], array_column($users, 'name'));
     }

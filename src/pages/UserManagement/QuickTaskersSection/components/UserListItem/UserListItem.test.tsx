@@ -47,7 +47,7 @@ const user: User = {
 
 const mockModalDispatch = jest.fn();
 
-function renderItem() {
+function renderItem(itemUser: User = user) {
   return render(
     <ModalContext.Provider
       value={
@@ -57,7 +57,7 @@ function renderItem() {
         } as unknown as React.ContextType<typeof ModalContext>
       }
     >
-      <UserListItem user={user} />
+      <UserListItem user={itemUser} />
     </ModalContext.Provider>,
   );
 }
@@ -68,6 +68,23 @@ beforeEach(() => {
 });
 
 describe("UserListItem", () => {
+  it("opens the tasks app of a QuickTasker the viewer can manage", () => {
+    const open = jest.spyOn(window, "open").mockImplementation(() => null);
+    renderItem({ ...user, page_hash: "abc123", can_manage: true });
+
+    fireEvent.click(screen.getByText("Open tasks app"));
+
+    expect(open).toHaveBeenCalledWith("/tasks-app&code=abc123", "_blank");
+    expect(mockModalDispatch).not.toHaveBeenCalled();
+    open.mockRestore();
+  });
+
+  it("has no tasks app link for a QuickTasker the viewer can't manage", () => {
+    renderItem({ ...user, can_manage: false });
+
+    expect(screen.queryByText("Open tasks app")).toBeNull();
+  });
+
   it("shows the user's boards to administrators", () => {
     mockIsUserAllowedToManageWPUsers = true;
     renderItem();

@@ -26407,6 +26407,228 @@
                       }
                     }
                   ]
+                },
+                {
+                  "name": "Let the outsider manage QuickTaskers",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/wp-users/{{outsiderWpUserId}}/capabilities",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"quicktasker_admin_role\": true,\n  \"quicktasker_admin_role_allow_delete\": true,\n  \"quicktasker_admin_role_manage_users\": true,\n  \"quicktasker_admin_role_manage_settings\": true,\n  \"quicktasker_admin_role_manage_archive\": true,\n  \"quicktasker_access_user_page_app\": false,\n  \"quicktasker_view_my_tasks\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Create a QuickTasker without boards",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"Board access QuickTasker {{runId}}\",\n  \"description\": \"\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.collectionVariables.set('qtNoBoardsUserId', String(pm.response.json().data.id));"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A user not added to board E can manage QuickTaskers on their boards",
+              "item": [
+                {
+                  "name": "Outsider sees the tasks app link of a QuickTasker without boards",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtNoBoardsUserId'));\npm.test('the QuickTasker can be managed', () => pm.expect(user.can_manage).to.eql(true));\npm.test('tasks app link is included', () => pm.expect(user.page_hash).to.be.a('string').and.not.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider can disable a QuickTasker without boards",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtNoBoardsUserId}}/status",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"status\": false\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Outsider can delete a QuickTasker without boards",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtNoBoardsUserId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                        ]
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -27357,6 +27579,195 @@
                           "language": "json"
                         }
                       }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}/password-reset",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/password-reset",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}/status",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/status",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"status\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "PATCH /users/{id}/unban",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/unban",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 403', () => pm.response.to.have.status(403));",
+                          "pm.test('error code is rest_forbidden', () => pm.expect(pm.response.json().code).to.eql('rest_forbidden'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "DELETE /users/{id}",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "event": [
@@ -28771,7 +29182,7 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));"
+                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));\npm.test('admin can manage the QuickTasker', () => pm.expect(user.can_manage).to.eql(true));\npm.test('tasks app link is included', () => pm.expect(user.page_hash).to.be.a('string').and.not.be.empty);"
                         ]
                       }
                     }
@@ -28806,7 +29217,42 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));"
+                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));\npm.test('a QuickTasker on board E cannot be managed', () => pm.expect(user.can_manage).to.eql(false));\npm.test('tasks app link is left out', () => pm.expect(user).to.not.have.property('page_hash'));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "QuickTasker details",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users/{{qtUserId}}/extended",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const user = pm.response.json().data;\npm.test('a QuickTasker on board E cannot be managed', () => pm.expect(user.can_manage).to.eql(false));\npm.test('tasks app link is left out', () => pm.expect(user).to.not.have.property('page_hash'));"
                         ]
                       }
                     }

@@ -40,15 +40,18 @@ function UserListItem({ user }: Props) {
       }}
       className="wpqt-cursor-pointer"
     >
-      <WPQTCardDataItem
-        className="hover:wpqt-underline wpqt-self-start"
-        label={__("Open tasks app", "quicktasker")}
-        icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
-        onClick={(e) => {
-          e.stopPropagation();
-          window.open(userPageLink, "_blank");
-        }}
-      />
+      {/* The link is left out for QuickTaskers the viewer can't manage. */}
+      {user.page_hash && (
+        <WPQTCardDataItem
+          className="hover:wpqt-underline wpqt-self-start"
+          label={__("Open tasks app", "quicktasker")}
+          icon={<EyeIcon className="wpqt-size-5 wpqt-icon-blue" />}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(userPageLink, "_blank");
+          }}
+        />
+      )}
 
       <WPQTCardDataItem
         className="hover:wpqt-underline wpqt-self-start"

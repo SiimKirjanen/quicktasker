@@ -1802,6 +1802,8 @@ const PERMISSION_CALLBACKS = {
   hasRequiredPermissionsForArchiveCleanup: "archiveCleanup",
   hasRequiredPermissionsForManagingQuickTaskerSessions: "sessions",
   hasRequiredPermissionsForMyTasks: "myTasks",
+  canManageQuicktaskerUser: "users",
+  canDeleteQuicktaskerUser: "usersDelete",
 };
 
 const routeKey = ({ method, path: routePath }) => `${method} ${routePath}`;
@@ -4704,7 +4706,65 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
           `pm.test('the API token, webhook and automation that stopped working are reported', () => pm.expect(pm.response.json().data.stopped_integrations).to.eql([{ pipeline_id: Number(pm.collectionVariables.get('boardEId')), api_token_count: 1, webhook_count: 1, automation_count: 1 }]));`,
         ],
       }),
+      // Managing QuickTaskers gives access to their tasks app, so the outsider may only manage the ones on their boards.
+      // With the capability, only the board can refuse them.
+      request({
+        name: "Let the outsider manage QuickTaskers",
+        method: "PATCH",
+        url: "/wp-users/{{outsiderWpUserId}}/capabilities",
+        body: {
+          quicktasker_admin_role: true,
+          quicktasker_admin_role_allow_delete: true,
+          quicktasker_admin_role_manage_users: true,
+          quicktasker_admin_role_manage_settings: true,
+          quicktasker_admin_role_manage_archive: true,
+          quicktasker_access_user_page_app: false,
+          quicktasker_view_my_tasks: true,
+        },
+        tests: [status(200), success(true)],
+      }),
+      request({
+        name: "Create a QuickTasker without boards",
+        method: "POST",
+        url: "/users",
+        body: { name: "Board access QuickTasker {{runId}}", description: "" },
+        tests: [
+          status(200),
+          save("qtNoBoardsUserId", "pm.response.json().data.id"),
+        ],
+      }),
     ]),
+    folder(
+      "A user not added to board E can manage QuickTaskers on their boards",
+      [
+        request({
+          name: "Outsider sees the tasks app link of a QuickTasker without boards",
+          url: "/users",
+          auth: outsiderAuth,
+          tests: [
+            status(200),
+            `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtNoBoardsUserId'));
+pm.test('the QuickTasker can be managed', () => pm.expect(user.can_manage).to.eql(true));
+pm.test('tasks app link is included', () => pm.expect(user.page_hash).to.be.a('string').and.not.be.empty);`,
+          ],
+        }),
+        request({
+          name: "Outsider can disable a QuickTasker without boards",
+          method: "PATCH",
+          url: "/users/{{qtNoBoardsUserId}}/status",
+          body: { status: false },
+          auth: outsiderAuth,
+          tests: [status(200), success(true)],
+        }),
+        request({
+          name: "Outsider can delete a QuickTasker without boards",
+          method: "DELETE",
+          url: "/users/{{qtNoBoardsUserId}}",
+          auth: outsiderAuth,
+          tests: [status(200), success(true)],
+        }),
+      ],
+    ),
     folder(
       "A user not added to board E is rejected",
       adminRoutes
@@ -4758,7 +4818,9 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
         tests: [
           status(200),
           `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));
-pm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));`,
+pm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));
+pm.test('admin can manage the QuickTasker', () => pm.expect(user.can_manage).to.eql(true));
+pm.test('tasks app link is included', () => pm.expect(user.page_hash).to.be.a('string').and.not.be.empty);`,
         ],
       }),
       request({
@@ -4768,7 +4830,20 @@ pm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.i
         tests: [
           status(200),
           `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));
-pm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));`,
+pm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));
+pm.test('a QuickTasker on board E cannot be managed', () => pm.expect(user.can_manage).to.eql(false));
+pm.test('tasks app link is left out', () => pm.expect(user).to.not.have.property('page_hash'));`,
+        ],
+      }),
+      request({
+        name: "QuickTasker details",
+        url: "/users/{{qtUserId}}/extended",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `const user = pm.response.json().data;
+pm.test('a QuickTasker on board E cannot be managed', () => pm.expect(user.can_manage).to.eql(false));
+pm.test('tasks app link is left out', () => pm.expect(user).to.not.have.property('page_hash'));`,
         ],
       }),
       request({

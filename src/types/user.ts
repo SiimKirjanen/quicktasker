@@ -5,8 +5,11 @@ type BaseUser = {
   name: string;
   description: string;
   created_at: string;
-  // Only sent to users who can manage QuickTaskers.
+  // Only sent when the viewer can manage this QuickTasker.
   page_hash?: string;
+  // Whether the viewer can manage this QuickTasker, like editing them or resetting their password.
+  // False when the QuickTasker is on boards the viewer has not been added to. Missing on a user that was just created.
+  can_manage?: boolean;
   assigned_tasks_count: string;
   user_type: UserTypes.QUICKTASKER;
   // The boards the user has been added to. Missing on a user that was just created.
