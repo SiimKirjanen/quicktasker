@@ -7,6 +7,7 @@ import {
   RESET_PASSWORD,
   SET_USERS,
   SET_USERS_SEARCH_VALUE,
+  SET_USER_PIPELINE_IDS,
   SET_WP_USERS,
   SET_WP_USER_PIPELINE_IDS,
 } from "../constants";
@@ -87,6 +88,48 @@ describe("user reducer", () => {
       payload: { userId: "2", pipelineIds: [3, 4] },
     });
     expect(next.wpUsers.map((u) => u.pipeline_ids)).toEqual([[1], [3, 4]]);
+  });
+
+  it("SET_USER_PIPELINE_IDS updates only that QuickTasker's boards", () => {
+    const state: State = {
+      ...baseState,
+      users: [
+        makeUser({ id: "1", pipeline_ids: [1] }),
+        makeUser({ id: "2", pipeline_ids: [1] }),
+      ],
+      // A WordPress user with the same ID is not changed.
+      wpUsers: [
+        { id: "2", name: "wp", pipeline_ids: [1] },
+      ] as unknown as WPUser[],
+    };
+    const next = reducer(state, {
+      type: SET_USER_PIPELINE_IDS,
+      payload: { userId: "2", pipelineIds: [3, 4] },
+    });
+    expect(next.users.map((u) => u.pipeline_ids)).toEqual([[1], [3, 4]]);
+    expect(next.wpUsers[0].pipeline_ids).toEqual([1]);
+  });
+
+  it("SET_USER_PIPELINE_IDS gives boards to a QuickTasker that had none loaded", () => {
+    const state: State = { ...baseState, users: [makeUser({ id: "1" })] };
+    const next = reducer(state, {
+      type: SET_USER_PIPELINE_IDS,
+      payload: { userId: "1", pipelineIds: [5] },
+    });
+    expect(next.users[0].pipeline_ids).toEqual([5]);
+  });
+
+  it("EDIT_USER keeps the QuickTasker's boards, which the edit response leaves out", () => {
+    const state: State = {
+      ...baseState,
+      users: [makeUser({ id: "a", name: "Old", pipeline_ids: [2] })],
+    };
+    const next = reducer(state, {
+      type: EDIT_USER,
+      payload: makeServerUser({ id: "a", name: "New" }),
+    });
+    expect(next.users[0].name).toBe("New");
+    expect(next.users[0].pipeline_ids).toEqual([2]);
   });
 
   it("ADD_USER appends converted user", () => {

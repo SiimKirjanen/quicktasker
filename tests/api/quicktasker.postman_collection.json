@@ -5569,6 +5569,42 @@
           "name": "Board access",
           "item": [
             {
+              "name": "Notifications list the assignment on board A",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('has a notification on board A', () => pm.expect(pm.response.json().data.map((n) => String(n.pipeline_id))).to.include(pm.collectionVariables.get('boardAId')));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Assignable tasks leave out boards the user is not on",
               "request": {
                 "method": "GET",
@@ -5885,6 +5921,266 @@
                       "pm.test('status is 400', () => pm.response.to.have.status(400));",
                       "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
                       "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot list comments of an assigned task after being removed from its board",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to view the comments\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to view the comments'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot comment on an assigned task after being removed from its board",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/comments",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"comment\": \"After removal {{runId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot move an assigned task after being removed from its board",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/stage",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stageId\": \"{{stageA1Id}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot change custom fields of an assigned task after being removed from its board",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/custom-fields/{{qtCustomFieldId}}",
+                "auth": {
+                  "type": "noauth"
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customFieldId\": \"{{qtCustomFieldId}}\",\n  \"entityId\": \"{{upAssignedTaskId}}\",\n  \"entityType\": \"task\",\n  \"value\": \"after removal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to edit task custom fields\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to edit task custom fields'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Cannot unassign from a task after being removed from its board",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/tasks/{{upAssignedTaskHash}}/users",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                      "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));",
+                      "pm.test('message mentions \"Not allowed to unassign from the task\"', () => pm.expect(JSON.stringify(pm.response.json())).to.include('Not allowed to unassign from the task'));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Notifications leave out boards the user was removed from",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-WPQT-USER-API-Nonce",
+                    "value": "{{userApiNonce}}"
+                  },
+                  {
+                    "key": "X-WPQT-USER-PAGE-CODE",
+                    "value": "{{qtPageHash}}"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "wpqt-session-token-{{qtPageHash}}={{qtSession}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/user-page/notifications",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "pm.test('no notifications are listed', () => pm.expect(pm.response.json().data).to.eql([]));"
                     ]
                   }
                 }
@@ -28968,6 +29264,41 @@
                     "exec": [
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
                       "pm.test('success is true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Deleting board E removes it from the QuickTasker's boards",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{adminUser}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{adminAppPassword}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                      "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('QuickTasker keeps only board A', () => pm.expect(user.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardAId'))]));"
                     ]
                   }
                 }

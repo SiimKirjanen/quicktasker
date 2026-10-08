@@ -1398,6 +1398,14 @@ const userPageTasks = folder("Tasks", [
 // The user was added to board A only in the setup.
 const userPageBoardAccess = folder("Board access", [
   userPageRequest({
+    name: "Notifications list the assignment on board A",
+    url: "/user-page/notifications",
+    tests: [
+      status(200),
+      `pm.test('has a notification on board A', () => pm.expect(pm.response.json().data.map((n) => String(n.pipeline_id))).to.include(pm.collectionVariables.get('boardAId')));`,
+    ],
+  }),
+  userPageRequest({
     name: "Assignable tasks leave out boards the user is not on",
     url: "/user-page/assignable-tasks",
     tests: [
@@ -1465,6 +1473,51 @@ const userPageBoardAccess = folder("Board access", [
     url: "/user-page/tasks/{{upAssignedTaskHash}}/done",
     body: { done: true },
     tests: failsWith("Not allowed to edit"),
+  }),
+  userPageRequest({
+    name: "Cannot list comments of an assigned task after being removed from its board",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}/comments",
+    tests: failsWith("Not allowed to view the comments"),
+  }),
+  userPageRequest({
+    name: "Cannot comment on an assigned task after being removed from its board",
+    method: "POST",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}/comments",
+    body: { comment: "After removal {{runId}}" },
+    tests: failsWith("Not allowed to edit"),
+  }),
+  userPageRequest({
+    name: "Cannot move an assigned task after being removed from its board",
+    method: "PATCH",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}/stage",
+    body: { stageId: "{{stageA1Id}}" },
+    tests: failsWith("Not allowed to edit"),
+  }),
+  userPageRequest({
+    name: "Cannot change custom fields of an assigned task after being removed from its board",
+    method: "PATCH",
+    url: "/user-page/custom-fields/{{qtCustomFieldId}}",
+    body: {
+      customFieldId: "{{qtCustomFieldId}}",
+      entityId: "{{upAssignedTaskId}}",
+      entityType: "task",
+      value: "after removal",
+    },
+    tests: failsWith("Not allowed to edit task custom fields"),
+  }),
+  userPageRequest({
+    name: "Cannot unassign from a task after being removed from its board",
+    method: "DELETE",
+    url: "/user-page/tasks/{{upAssignedTaskHash}}/users",
+    tests: failsWith("Not allowed to unassign from the task"),
+  }),
+  userPageRequest({
+    name: "Notifications leave out boards the user was removed from",
+    url: "/user-page/notifications",
+    tests: [
+      status(200),
+      `pm.test('no notifications are listed', () => pm.expect(pm.response.json().data).to.eql([]));`,
+    ],
   }),
   request({
     name: "The user stays assigned after being removed from the board",
@@ -4845,6 +4898,15 @@ pm.test('comment log belongs to board A', () => pm.expect(String(commentLog && c
       method: "DELETE",
       url: "/pipelines/{{boardEId}}",
       tests: [status(200), success(true)],
+    }),
+    request({
+      name: "Deleting board E removes it from the QuickTasker's boards",
+      url: "/users",
+      tests: [
+        status(200),
+        `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));
+pm.test('QuickTasker keeps only board A', () => pm.expect(user.pipeline_ids).to.eql([Number(pm.collectionVariables.get('boardAId'))]));`,
+      ],
     }),
   ],
   "WordPress users who are not administrators can only use the boards they have been added to. Board E's entities are created for these requests, so that rejections are not caused by missing entities.",
