@@ -84,9 +84,7 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function canAccessPipeline($wpUserId, $pipelineId)
         {
-            $accessiblePipelineIds = $this->getAccessiblePipelineIds($wpUserId);
-
-            return null === $accessiblePipelineIds || in_array((int) $pipelineId, $accessiblePipelineIds, true);
+            return $this->canUserAccessPipeline($wpUserId, WP_QT_WORDPRESS_USER_TYPE, $pipelineId);
         }
 
         /**
@@ -213,8 +211,20 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          */
         public function filterItemsForUser($userId, $userType, $items)
         {
-            $accessiblePipelineIds = $this->getUserAccessiblePipelineIds($userId, $userType);
+            return $this->filterItemsOnPipelines($items, $this->getUserAccessiblePipelineIds($userId, $userType));
+        }
 
+        /**
+         * Keeps only the items, like tasks, that belong to one of the given boards.
+         *
+         * For filtering several lists with boards looked up once, see getUserAccessiblePipelineIds().
+         *
+         * @param array $items Objects with a pipeline_id property.
+         * @param int[]|null $accessiblePipelineIds The board IDs, or null to keep every item, including items without a board.
+         * @return array The kept items, re-indexed.
+         */
+        public function filterItemsOnPipelines($items, $accessiblePipelineIds)
+        {
             if (null === $accessiblePipelineIds) {
                 return array_values($items);
             }
@@ -230,9 +240,11 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          * Sets can_access_all_pipelines, and pipeline_ids with the boards the user has been added to.
          *
          * @param array $wpUsers WordPress user objects with an id property.
+         * @param int[]|null $visiblePipelineIds Only list these boards, like the boards the viewer can access,
+         *                                       so other boards are not revealed. Null lists every board.
          * @return array The same user objects.
          */
-        public function addPipelineAccessToWPUsers($wpUsers)
+        public function addPipelineAccessToWPUsers($wpUsers, $visiblePipelineIds = null)
         {
             $pipelineAccessRepo = ServiceLocator::get('PipelineAccessRepository');
             $pipelineIdsByWPUserId = $pipelineAccessRepo->getPipelineIdsByWPUserIds(
@@ -241,7 +253,10 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
 
             foreach ($wpUsers as $wpUser) {
                 $wpUser->can_access_all_pipelines = $pipelineAccessRepo->canAccessAllPipelines((int) $wpUser->id);
-                $wpUser->pipeline_ids = $pipelineIdsByWPUserId[(int) $wpUser->id] ?? [];
+                $wpUser->pipeline_ids = $this->keepVisiblePipelineIds(
+                    $pipelineIdsByWPUserId[(int) $wpUser->id] ?? [],
+                    $visiblePipelineIds
+                );
             }
 
             return $wpUsers;
@@ -251,19 +266,40 @@ if (!class_exists('WPQT\Pipeline\PipelineAccessService')) {
          * Adds the boards each QuickTasker user has been added to, as pipeline_ids, to the user objects.
          *
          * @param array $users QuickTasker user objects with an id property.
+         * @param int[]|null $visiblePipelineIds Only list these boards, like the boards the viewer can access,
+         *                                       so other boards are not revealed. Null lists every board.
          * @return array The same user objects.
          */
-        public function addPipelineAccessToQuicktaskerUsers($users)
+        public function addPipelineAccessToQuicktaskerUsers($users, $visiblePipelineIds = null)
         {
             $pipelineIdsByUserId = ServiceLocator::get('PipelineAccessRepository')->getPipelineIdsByQuicktaskerUserIds(
                 array_map('intval', array_column($users, 'id'))
             );
 
             foreach ($users as $user) {
-                $user->pipeline_ids = $pipelineIdsByUserId[(int) $user->id] ?? [];
+                $user->pipeline_ids = $this->keepVisiblePipelineIds(
+                    $pipelineIdsByUserId[(int) $user->id] ?? [],
+                    $visiblePipelineIds
+                );
             }
 
             return $users;
+        }
+
+        /**
+         * Keeps only the visible boards of a user's boards.
+         *
+         * @param int[] $pipelineIds The user's board IDs.
+         * @param int[]|null $visiblePipelineIds The visible board IDs, or null if every board is visible.
+         * @return int[] The visible board IDs, in the same order.
+         */
+        private function keepVisiblePipelineIds($pipelineIds, $visiblePipelineIds)
+        {
+            if (null === $visiblePipelineIds) {
+                return $pipelineIds;
+            }
+
+            return array_values(array_intersect($pipelineIds, $visiblePipelineIds));
         }
 
         /**

@@ -415,6 +415,36 @@ class PipelineAccessServiceTest extends TestCase
         $this->assertFalse(property_exists($users[0], 'can_access_all_pipelines'));
     }
 
+    public function test_filters_items_on_boards_that_were_looked_up_once()
+    {
+        $items = [(object) ['id' => 'a', 'pipeline_id' => '1'], (object) ['id' => 'b', 'pipeline_id' => '2'], (object) ['id' => 'c', 'pipeline_id' => null]];
+
+        $this->assertSame(['b'], array_column($this->service->filterItemsOnPipelines($items, [2]), 'id'));
+        $this->assertSame([], $this->service->filterItemsOnPipelines($items, []));
+        $this->assertSame(['a', 'b', 'c'], array_column($this->service->filterItemsOnPipelines($items, null), 'id'));
+    }
+
+    public function test_lists_only_visible_boards_of_quicktasker_users()
+    {
+        $this->quicktaskerBoardIds[self::LIMITED_USER_ID] = [1, 2, 3];
+        $users = [(object) ['id' => (string) self::LIMITED_USER_ID]];
+
+        $users = $this->service->addPipelineAccessToQuicktaskerUsers($users, [3, 1]);
+
+        $this->assertSame([1, 3], $users[0]->pipeline_ids);
+    }
+
+    public function test_lists_only_visible_boards_of_wp_users()
+    {
+        $this->userBoardIds[self::LIMITED_USER_ID] = [1, 2];
+        $users = [(object) ['id' => (string) self::LIMITED_USER_ID]];
+
+        $users = $this->service->addPipelineAccessToWPUsers($users, [2]);
+
+        $this->assertSame([2], $users[0]->pipeline_ids);
+        $this->assertFalse($users[0]->can_access_all_pipelines);
+    }
+
     public function test_changing_a_quicktasker_users_boards_leaves_the_wordpress_user_with_the_same_id_alone()
     {
         $this->userBoardIds[self::LIMITED_USER_ID] = [1];

@@ -19,18 +19,18 @@ if (!class_exists('WPQT\User\UserService')) {
          * A QuickTasker's page hash lets anyone set the password of a user who has
          * none yet, so it is only included for users allowed to manage QuickTaskers.
          * Each user's boards are included as pipeline_ids, so the admin app can tell
-         * which boards they can be assigned on.
+         * which boards they can be assigned on. Like assigned tasks, only boards the
+         * viewer can access are included.
          *
          * @return array List of QuickTasker users.
          */
         public function getUsersForCurrentViewer()
         {
             $pipelineAccessService = ServiceLocator::get('PipelineAccessService');
-            // Assigned tasks are only counted on boards the viewer can access.
+            $viewerPipelineIds = $pipelineAccessService->getAccessiblePipelineIds(get_current_user_id());
             $users = $pipelineAccessService->addPipelineAccessToQuicktaskerUsers(
-                ServiceLocator::get('UserRepository')->getUsers(
-                    $pipelineAccessService->getAccessiblePipelineIds(get_current_user_id())
-                )
+                ServiceLocator::get('UserRepository')->getUsers($viewerPipelineIds),
+                $viewerPipelineIds
             );
 
             if (PermissionService::hasRequiredParmissionsForPrivateAPIUsersEndpoints()) {

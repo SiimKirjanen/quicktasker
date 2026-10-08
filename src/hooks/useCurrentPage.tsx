@@ -15,7 +15,8 @@ import { UserSessionsPage } from "../pages/UserSessionsPage/UserSessionsPage";
 import { UserTasksPage } from "../pages/UserTasksPage/UserTasksPage";
 import { WebhooksPage } from "../pages/WebhooksPage/WebhooksPage";
 
-const USER_MANAGEMENT_ROUTE = /^#\/user-management(\/\d+)?(\/tasks)?$/;
+const USER_MANAGEMENT_ROUTE =
+  /^#\/user-management(\/quicktaskers|\/\d+(\/tasks)?)?$/;
 
 const useCurrentPage = () => {
   const [currentPage, setCurrentPage] = useState(getPageFromUrl());
@@ -101,6 +102,9 @@ const getPageFromUrl = () => {
     switch (hash) {
       case "#/user-management":
         return <UserManagement />;
+      // Keyed, so going between the two opens the other tab.
+      case "#/user-management/quicktaskers":
+        return <UserManagement key="quicktaskers" showQuickTaskers />;
       case "#/archive":
         return <ArchivePage />;
       case "#/quicktasker-sessions":

@@ -28743,6 +28743,76 @@
                   ]
                 },
                 {
+                  "name": "Admin sees board E among the QuickTasker's boards",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{adminUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{adminAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "QuickTasker boards",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/users",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                          "const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));\npm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "name": "Admin sees archived task E2",
                   "request": {
                     "method": "GET",

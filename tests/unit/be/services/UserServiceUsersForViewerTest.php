@@ -37,6 +37,9 @@ class UserServiceUsersForViewerTest extends TestCase
     private $service;
     private $userRepoMock;
 
+    /** @var int[]|null The boards the users' boards were limited to. */
+    private $visiblePipelineIds;
+
     protected function setUp(): void
     {
         $this->userRepoMock = $userRepoMock = $this->getMockBuilder(stdClass::class)
@@ -55,7 +58,9 @@ class UserServiceUsersForViewerTest extends TestCase
             ->addMethods(['getAccessiblePipelineIds', 'addPipelineAccessToQuicktaskerUsers'])
             ->getMock();
         $pipelineAccessServiceMock->method('getAccessiblePipelineIds')->willReturn([3]);
-        $pipelineAccessServiceMock->method('addPipelineAccessToQuicktaskerUsers')->willReturnCallback(function ($users) {
+        $pipelineAccessServiceMock->method('addPipelineAccessToQuicktaskerUsers')->willReturnCallback(function ($users, $visiblePipelineIds) {
+            $this->visiblePipelineIds = $visiblePipelineIds;
+
             foreach ($users as $user) {
                 $user->pipeline_ids = '1' === $user->id ? [3] : [];
             }
@@ -109,5 +114,14 @@ class UserServiceUsersForViewerTest extends TestCase
         $users = $this->service->getUsersForCurrentViewer();
 
         $this->assertSame([[3], []], array_column($users, 'pipeline_ids'));
+    }
+
+    public function test_getUsersForCurrentViewer_lists_only_the_viewers_boards()
+    {
+        $GLOBALS['wpqt_test_current_user_caps'] = [WP_QUICKTASKER_ADMIN_ROLE];
+
+        $this->service->getUsersForCurrentViewer();
+
+        $this->assertSame([3], $this->visiblePipelineIds);
     }
 }

@@ -198,7 +198,7 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         /**
          * Checks if a user is allowed to view a task.
          *
-         * WordPress users must also have been added to the task's board.
+         * The user must also have been added to the task's board, unless they are a WordPress administrator.
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.
@@ -301,7 +301,7 @@ if (!class_exists('WPQT\Permission\PermissionService')) {
         /**
          * Check if a user page user is allowed to edit a task.
          *
-         * WordPress users must also have been added to the task's board.
+         * The user must also have been added to the task's board, unless they are a WordPress administrator.
          *
          * @param int $userId The ID of the user.
          * @param int $taskId The ID of the task.

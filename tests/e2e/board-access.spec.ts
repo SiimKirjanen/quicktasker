@@ -672,10 +672,18 @@ test.describe('Board access notice after updating', () => {
       await page.goto('/wp-admin/');
       await expect(notice).toBeVisible();
       await expect(notice).toContainText('QuickTasker users now only see tasks on the boards they have been added to.');
-      await expect(notice.getByRole('link', { name: 'Add users to boards' })).toHaveAttribute(
-        'href',
-        /page=wp-quicktasker#\/user-management$/,
-      );
+      const addUsersLink = notice.getByRole('link', { name: 'Add users to boards' });
+      await expect(addUsersLink).toHaveAttribute('href', /page=wp-quicktasker#\/user-management\/quicktaskers$/);
+
+      // The link opens User management on the QuickTaskers tab, where their boards are changed.
+      await addUsersLink.click();
+      await expect(page.getByRole('heading', { name: 'User management' })).toBeVisible({
+        timeout: TIMEOUTS.NAVIGATION,
+      });
+      await expect(page.getByRole('tab', { name: 'QuickTaskers' })).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByText('Add QuickTasker')).toBeVisible();
+      await page.goto('/wp-admin/');
+      await expect(notice).toBeVisible();
 
       // Only administrators can add QuickTasker users to boards, so others are not told.
       const userPage = await context.newPage();

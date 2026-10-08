@@ -120,7 +120,8 @@ if (!function_exists('wpqt_quicktasker_board_access_notice')) {
             return;
         }
 
-        $userManagementUrl = admin_url('admin.php?page=wp-quicktasker#/user-management');
+        // Opens User management on the QuickTaskers tab, where their boards are changed.
+        $userManagementUrl = admin_url('admin.php?page=wp-quicktasker#/user-management/quicktaskers');
         $dismissUrl = wp_nonce_url(add_query_arg('wpqt_dismiss_quicktasker_board_access_notice', '1'), 'wpqt_dismiss_quicktasker_board_access_notice');
 
         echo '<div class="notice notice-warning" data-testid="wpqt-quicktasker-board-access-notice"><p><strong>QuickTasker:</strong> '

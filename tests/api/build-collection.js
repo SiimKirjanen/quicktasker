@@ -4753,6 +4753,25 @@ pm.test('the webhook creator has no access', () => pm.expect(webhook && webhook.
         ],
       }),
       request({
+        name: "Admin sees board E among the QuickTasker's boards",
+        url: "/users",
+        tests: [
+          status(200),
+          `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));
+pm.test('board E is listed', () => pm.expect(user.pipeline_ids.map(String)).to.include(pm.collectionVariables.get('boardEId')));`,
+        ],
+      }),
+      request({
+        name: "QuickTasker boards",
+        url: "/users",
+        auth: outsiderAuth,
+        tests: [
+          status(200),
+          `const user = pm.response.json().data.find((u) => String(u.id) === pm.collectionVariables.get('qtUserId'));
+pm.test('board E is not listed', () => pm.expect(user.pipeline_ids.map(String)).to.not.include(pm.collectionVariables.get('boardEId')));`,
+        ],
+      }),
+      request({
         name: "Admin sees archived task E2",
         url: "/tasks/archived?order=DESC",
         tests: [
