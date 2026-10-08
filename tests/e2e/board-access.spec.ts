@@ -153,6 +153,28 @@ test.describe('Board access', () => {
         }, taskHash);
       expect((await openTask(assignedA.taskHash)).success).toBe(true);
       expect((await openTask(assignedB.taskHash)).success).toBe(false);
+
+      // So is unassigning from it, which would also show the task.
+      const unassignFromTask = (taskHash: string) =>
+        userPage.evaluate(async (hash) => {
+          const { wp, wpqt_user } = window as unknown as {
+            wp: { apiFetch: (options: object) => Promise<{ success: boolean; data: unknown }> };
+            wpqt_user: { userApiNonce: string };
+          };
+          try {
+            return await wp.apiFetch({
+              path: `/wpqt/v1/user-page/tasks/${hash}/users`,
+              method: 'DELETE',
+              headers: { 'X-WPQT-USER-API-Nonce': wpqt_user.userApiNonce },
+            });
+          } catch (error) {
+            return error as { success: boolean; data: unknown };
+          }
+        }, taskHash);
+      const refusedUnassign = await unassignFromTask(assignedB.taskHash);
+      expect(refusedUnassign.success).toBe(false);
+      expect(refusedUnassign.data).toBeNull();
+      expect((await unassignFromTask(assignedA.taskHash)).success).toBe(true);
     } finally {
       await context.close();
       await deleteBoardViaApi(request, boardAName);
