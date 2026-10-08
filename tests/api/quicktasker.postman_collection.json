@@ -24539,7 +24539,7 @@
                         "type": "text/javascript",
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                          "pm.test('board E notification is listed', () => pm.expect(pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);"
+                          "const boardENotifications = pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'));\npm.test('board E notification is listed', () => pm.expect(boardENotifications).to.not.be.empty);\npm.collectionVariables.set('outsiderBoardENotificationId', boardENotifications.length ? String(boardENotifications[0].id) : '0');"
                         ]
                       }
                     }
@@ -29708,6 +29708,41 @@
                         "exec": [
                           "pm.test('status is 200', () => pm.response.to.have.status(200));",
                           "pm.test('board E notifications are not listed', () => pm.expect(pm.response.json().data.filter((x) => String(x.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.be.empty);"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A board E notification cannot be read through marking it read",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": "{{baseUrl}}/wp-json/wpqt/v1/notifications/{{outsiderBoardENotificationId}}/read",
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{outsiderUser}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{outsiderAppPassword}}",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                          "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
                         ]
                       }
                     }

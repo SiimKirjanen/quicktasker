@@ -4167,7 +4167,9 @@ pm.collectionVariables.set('outsiderWpUserId', outsider ? String(outsider.id) : 
         auth: outsiderAuth,
         tests: [
           status(200),
-          `pm.test('board E notification is listed', () => pm.expect(pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'))).to.not.be.empty);`,
+          `const boardENotifications = pm.response.json().data.filter((n) => String(n.pipeline_id) === pm.collectionVariables.get('boardEId'));
+pm.test('board E notification is listed', () => pm.expect(boardENotifications).to.not.be.empty);
+pm.collectionVariables.set('outsiderBoardENotificationId', boardENotifications.length ? String(boardENotifications[0].id) : '0');`,
         ],
       }),
       request({
@@ -4976,6 +4978,13 @@ pm.test('comment log belongs to board A', () => pm.expect(String(commentLog && c
             "pm.response.json().data",
           ),
         ],
+      }),
+      request({
+        name: "A board E notification cannot be read through marking it read",
+        method: "POST",
+        url: "/notifications/{{outsiderBoardENotificationId}}/read",
+        auth: outsiderAuth,
+        tests: [status(400), success(false)],
       }),
       request({
         name: "Notifications filtered to board E",
