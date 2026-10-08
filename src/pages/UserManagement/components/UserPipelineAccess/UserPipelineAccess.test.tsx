@@ -1,15 +1,20 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { toast } from "react-toastify";
 
-const mockUpdateWPUserPipelines = jest.fn();
-jest.mock("../../../../../hooks/actions/useWPUserPipelineActions", () => ({
-  useWPUserPipelineActions: () => ({
-    updateWPUserPipelines: mockUpdateWPUserPipelines,
+// Called without the user type, which mockSavedUserTypes records.
+const mockUpdateUserPipelines = jest.fn();
+const mockSavedUserTypes: string[] = [];
+jest.mock("../../../../hooks/actions/useUserPipelineActions", () => ({
+  useUserPipelineActions: () => ({
+    updateUserPipelines: (userType: string, ...args: unknown[]) => {
+      mockSavedUserTypes.push(userType);
+      return mockUpdateUserPipelines(...args);
+    },
   }),
 }));
 
 const mockGetPipelinesRequest = jest.fn();
-jest.mock("../../../../../api/api", () => ({
+jest.mock("../../../../api/api", () => ({
   getPipelinesRequest: () => mockGetPipelinesRequest(),
 }));
 
@@ -22,7 +27,7 @@ jest.mock("react-toastify", () => ({
   },
 }));
 
-jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
+jest.mock("../../../../components/common/Select/WPQTMultiSelect", () => ({
   WPQTMultiSelect: ({
     id,
     options,
@@ -73,18 +78,21 @@ jest.mock("../../../../../components/common/Select/WPQTMultiSelect", () => ({
 }));
 
 import {
+  SET_USER_PIPELINE_IDS,
   SET_WP_USER_PIPELINE_IDS,
   WP_QUICKTASKER_EXCEPTION_PIPELINE_NOT_FOUND,
-} from "../../../../../constants";
-import { PipelinesContext } from "../../../../../providers/PipelinesContextProvider";
-import { UserContext } from "../../../../../providers/UserContextProvider";
-import { Pipeline } from "../../../../../types/pipeline";
+} from "../../../../constants";
+import { isWPUser } from "../../../../guards/user-guard";
+import { PipelinesContext } from "../../../../providers/PipelinesContextProvider";
+import { UserContext } from "../../../../providers/UserContextProvider";
+import { Pipeline } from "../../../../types/pipeline";
 import {
+  User,
   UserTypes,
   WPUser,
   WPUserPipelinesUpdate,
-} from "../../../../../types/user";
-import { WPUserPipelineAccess } from "./WPUserPipelineAccess";
+} from "../../../../types/user";
+import { UserPipelineAccess } from "./UserPipelineAccess";
 
 const pipelines = [
   { id: "1", name: "Board 1", is_primary: true },
@@ -96,6 +104,23 @@ const manyPipelines = Array.from({ length: 7 }, (_, i) => ({
   name: `Board ${i + 1}`,
   is_primary: false,
 })) as Pipeline[];
+
+// Shares its ID with no WordPress user here, but IDs of the two types can be the same.
+function makeQuicktasker(pipelineIds?: number[]): User {
+  return {
+    id: "7",
+    name: "Quinn",
+    description: "",
+    created_at: "2024-01-01T00:00:00Z",
+    assigned_tasks_count: "0",
+    user_type: UserTypes.QUICKTASKER,
+    is_active: true,
+    is_banned: false,
+    banned_at: null,
+    has_password: true,
+    pipeline_ids: pipelineIds,
+  };
+}
 
 function makeWPUser(pipelineIds?: number[]): WPUser {
   return {
@@ -152,7 +177,7 @@ function saveOnServer(
 }
 
 function respondWith(extras: UpdateExtras) {
-  mockUpdateWPUserPipelines.mockImplementation(
+  mockUpdateUserPipelines.mockImplementation(
     async (
       _userId: string,
       add: string[],
@@ -164,26 +189,30 @@ function respondWith(extras: UpdateExtras) {
 
 // The added and removed boards of each save.
 function savedChanges() {
-  return mockUpdateWPUserPipelines.mock.calls.map((c) => [c[1], c[2]]);
+  return mockUpdateUserPipelines.mock.calls.map((c) => [c[1], c[2]]);
 }
 
 const mockUserDispatch = jest.fn();
 
-function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
+function renderAccess(user: User | WPUser, boards: Pipeline[] = pipelines) {
   serverPipelineIds = [...(user.pipeline_ids ?? [])];
-  const tree = (currentUser: WPUser) => (
+  const tree = (currentUser: User | WPUser) => (
     <PipelinesContext.Provider
       value={{ state: { pipelines: boards }, pipelinesDispatch: jest.fn() }}
     >
       <UserContext.Provider
         value={{
-          state: { users: [], wpUsers: [currentUser], usersSearchValue: "" },
+          state: {
+            users: isWPUser(currentUser) ? [] : [currentUser],
+            wpUsers: isWPUser(currentUser) ? [currentUser] : [],
+            usersSearchValue: "",
+          },
           userDispatch: mockUserDispatch,
           updateUsers: jest.fn(),
           updateWPUsers: jest.fn(),
         }}
       >
-        <WPUserPipelineAccess user={currentUser} />
+        <UserPipelineAccess user={currentUser} />
       </UserContext.Provider>
     </PipelinesContext.Provider>
   );
@@ -192,7 +221,7 @@ function renderAccess(user: WPUser, boards: Pipeline[] = pipelines) {
   return {
     ...result,
     // Renders the card again with the user's boards as loaded on refresh.
-    rerenderWithUser: (updatedUser: WPUser) =>
+    rerenderWithUser: (updatedUser: User | WPUser) =>
       result.rerender(tree(updatedUser)),
   };
 }
@@ -202,7 +231,7 @@ function holdSaves(
   removed: WPUserPipelinesUpdate["removed_pipelines_with_assigned_tasks"] = [],
 ) {
   const releases: (() => void)[] = [];
-  mockUpdateWPUserPipelines.mockImplementation(
+  mockUpdateUserPipelines.mockImplementation(
     (
       _userId: string,
       add: string[],
@@ -234,11 +263,12 @@ function openSelector() {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockSavedUserTypes.length = 0;
   respondWith({});
   mockGetPipelinesRequest.mockResolvedValue({ data: pipelines });
 });
 
-describe("WPUserPipelineAccess", () => {
+describe("UserPipelineAccess", () => {
   it("lists the user's boards without creating the selector", () => {
     renderAccess(makeWPUser([2, 1]));
 
@@ -332,7 +362,7 @@ describe("WPUserPipelineAccess", () => {
       fireEvent.click(screen.getByText("only board 2"));
     });
 
-    expect(mockUpdateWPUserPipelines).toHaveBeenCalledWith(
+    expect(mockUpdateUserPipelines).toHaveBeenCalledWith(
       "wp1",
       ["2"],
       ["1"],
@@ -347,6 +377,116 @@ describe("WPUserPipelineAccess", () => {
     expect(toast.warning).not.toHaveBeenCalled();
   });
 
+  it("saves through the WordPress user's own request", async () => {
+    renderAccess(makeWPUser([1]));
+    openSelector();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("only board 2"));
+    });
+
+    expect(mockSavedUserTypes).toEqual([UserTypes.WP_USER]);
+  });
+
+  describe("QuickTasker users", () => {
+    it("lists a QuickTasker's boards with their own test IDs", () => {
+      renderAccess(makeQuicktasker([2]));
+
+      expect(
+        screen.getByTestId("quicktasker-boards-summary"),
+      ).toHaveTextContent("Board 2");
+      expect(screen.queryByTestId("wp-user-boards")).toBeNull();
+      expect(
+        screen.getByRole("button", { name: "Change boards of Quinn" }),
+      ).toHaveAttribute("data-testid", "quicktasker-boards-change");
+    });
+
+    it("shows a warning when a QuickTasker has no boards", () => {
+      // A user that was just created has no boards loaded.
+      renderAccess(makeQuicktasker());
+
+      const summary = screen.getByTestId("quicktasker-boards-summary");
+      expect(summary).toHaveTextContent("No boards");
+      expect(summary).toHaveClass("wpqt-text-yellow-700");
+    });
+
+    it("saves a QuickTasker's boards and updates the QuickTasker", async () => {
+      renderAccess(makeQuicktasker([1]));
+      fireEvent.click(screen.getByTestId("quicktasker-boards-change"));
+      expect(screen.getByTestId("quicktasker-boards-7")).toBeInTheDocument();
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("only board 2"));
+      });
+
+      expect(mockSavedUserTypes).toEqual([UserTypes.QUICKTASKER]);
+      expect(mockUpdateUserPipelines).toHaveBeenCalledWith(
+        "7",
+        ["2"],
+        ["1"],
+        expect.any(Function),
+        expect.any(Function),
+      );
+      expect(mockUserDispatch).toHaveBeenCalledWith({
+        type: SET_USER_PIPELINE_IDS,
+        payload: { userId: "7", pipelineIds: [2] },
+      });
+      expect(toast.success).toHaveBeenCalledWith("Quinn was added to Board 2.");
+      expect(toast.success).toHaveBeenCalledWith(
+        "Quinn was removed from Board 1.",
+      );
+    });
+
+    it("warns about a QuickTasker's tasks on removed boards", async () => {
+      respondWith({
+        removed_pipelines_with_assigned_tasks: [
+          { pipeline_id: 1, task_count: 1 },
+        ],
+      });
+      renderAccess(makeQuicktasker([1]));
+      fireEvent.click(screen.getByTestId("quicktasker-boards-change"));
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("no boards"));
+      });
+
+      expect(toast.warning).toHaveBeenCalledWith(
+        expect.stringContaining("Quinn is still assigned to 1 task on Board 1"),
+        { autoClose: false },
+      );
+    });
+
+    it("does not warn about integrations, which QuickTaskers cannot create", async () => {
+      mockUpdateUserPipelines.mockImplementation(
+        async (
+          _userId: string,
+          add: string[],
+          remove: string[],
+          callback: (
+            u: Omit<WPUserPipelinesUpdate, "stopped_integrations">,
+          ) => void,
+        ) => {
+          const { stopped_integrations: _ignored, ...update } = saveOnServer(
+            add,
+            remove,
+          );
+          callback(update);
+        },
+      );
+      renderAccess(makeQuicktasker([1]));
+      fireEvent.click(screen.getByTestId("quicktasker-boards-change"));
+
+      await act(async () => {
+        fireEvent.click(screen.getByText("no boards"));
+      });
+
+      expect(
+        screen.getByTestId("quicktasker-boards-summary"),
+      ).toHaveTextContent("No boards");
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+  });
+
   it("does not save when the selection did not change", async () => {
     renderAccess(makeWPUser([1, 2]));
     openSelector();
@@ -355,7 +495,7 @@ describe("WPUserPipelineAccess", () => {
       fireEvent.click(screen.getByText("boards 1 and 2"));
     });
 
-    expect(mockUpdateWPUserPipelines).not.toHaveBeenCalled();
+    expect(mockUpdateUserPipelines).not.toHaveBeenCalled();
   });
 
   it("warns about tasks still assigned on removed boards", async () => {
@@ -396,7 +536,7 @@ describe("WPUserPipelineAccess", () => {
         fireEvent.click(screen.getByText("only board 2"));
       });
 
-      expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(1);
+      expect(mockUpdateUserPipelines).toHaveBeenCalledTimes(1);
       expect(toast.warning).toHaveBeenCalledWith(expect.anything(), {
         autoClose: false,
       });
@@ -548,7 +688,7 @@ describe("WPUserPipelineAccess", () => {
   });
 
   it("restores the previous selection when saving fails", async () => {
-    mockUpdateWPUserPipelines.mockImplementation(
+    mockUpdateUserPipelines.mockImplementation(
       async (
         _userId: string,
         _add: string[],
@@ -724,7 +864,7 @@ describe("WPUserPipelineAccess", () => {
 
     function failThenSave(failures: number) {
       let calls = 0;
-      mockUpdateWPUserPipelines.mockImplementation(
+      mockUpdateUserPipelines.mockImplementation(
         async (
           _userId: string,
           add: string[],
@@ -783,7 +923,7 @@ describe("WPUserPipelineAccess", () => {
         fireEvent.click(screen.getByText("only board 2"));
       });
 
-      expect(mockUpdateWPUserPipelines).toHaveBeenCalledTimes(2);
+      expect(mockUpdateUserPipelines).toHaveBeenCalledTimes(2);
       expect(screen.getByTestId("selected")).toHaveTextContent("1");
       expect(toast.error).toHaveBeenCalledTimes(1);
     });

@@ -4494,7 +4494,8 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                      "pm.test('counts assigned and assignable tasks', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.assignedTasksCount).to.eql(1);\n  pm.expect(data.assignableTaskCount).to.be.at.least(1);\n});"
+                      "pm.test('counts assigned and assignable tasks', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.assignedTasksCount).to.eql(1);\n  pm.expect(data.assignableTaskCount).to.be.at.least(1);\n});",
+                      "pm.test('reports that the user has boards', () => pm.expect(pm.response.json().data.hasBoards).to.eql(true));"
                     ]
                   }
                 }
@@ -5759,7 +5760,8 @@
                     "type": "text/javascript",
                     "exec": [
                       "pm.test('status is 200', () => pm.response.to.have.status(200));",
-                      "pm.test('no assigned or assignable tasks', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.assignedTasksCount).to.eql(0);\n  pm.expect(data.assignableTaskCount).to.eql(0);\n});"
+                      "pm.test('no assigned or assignable tasks', () => {\n  const data = pm.response.json().data;\n  pm.expect(data.assignedTasksCount).to.eql(0);\n  pm.expect(data.assignableTaskCount).to.eql(0);\n});",
+                      "pm.test('reports that the user has no boards', () => pm.expect(pm.response.json().data.hasBoards).to.eql(false));"
                     ]
                   }
                 }

@@ -229,9 +229,13 @@ if (!function_exists('wpqt_register_user_page_api_routes')) {
                         $taskRepository->getTasksAssignableToUser()
                     );
 
+                    // Null means every board.
+                    $accessiblePipelineIds = $pipelineAccessService->getUserAccessiblePipelineIds($userId, $requestData['userType']);
+
                     $overviewData = (object) [
                         'assignedTasksCount'  => count($assignedTasks),
-                        'assignableTaskCount' => count($assignableTasks)
+                        'assignableTaskCount' => count($assignableTasks),
+                        'hasBoards'           => null === $accessiblePipelineIds || count($accessiblePipelineIds) > 0,
                     ];
 
                     return new WP_REST_Response((new ApiResponse(true, [], $overviewData))->toArray(), 200);

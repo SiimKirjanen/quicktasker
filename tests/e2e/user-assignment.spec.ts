@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { navigateToBoardsPage } from './utils/navigation';
-import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard } from './utils/board-helpers';
+import { createBoard, createStage, generateUniqueName, generateUniqueDescription, getTaskCard, reloadBoard } from './utils/board-helpers';
 import { addQuickTaskerToBoardsByName, createQuickTasker, assignWordPressUserToTask, closeUserAssignmentDropdown, openUserAssignmentDropdown } from './utils/user-helpers';
 import { ADMIN_USERNAME } from './constants';
 
@@ -66,6 +66,7 @@ test.describe('QuickTasker User Assignment', () => {
     await navigateToBoardsPage(page);
     await createBoard(page, boardName, generateUniqueDescription('Board for QuickTasker user assignment testing'));
     await addQuickTaskerToBoardsByName(request, qtUserName, [boardName]);
+    await reloadBoard(page, boardName);
     await createStage(page, generateUniqueName('QTUserStage'), generateUniqueDescription('Stage for QuickTasker user tests'));
     await page.getByText('Add task').click();
     await page.getByPlaceholder('Task name').fill(taskName);
@@ -91,6 +92,7 @@ test.describe('QuickTasker User Assignment', () => {
     await navigateToBoardsPage(page);
     await createBoard(page, boardName, generateUniqueDescription('Board for QuickTasker user assignment testing'));
     await addQuickTaskerToBoardsByName(request, qtUserName, [boardName]);
+    await reloadBoard(page, boardName);
     await createStage(page, generateUniqueName('QTUserStage'), generateUniqueDescription('Stage for QuickTasker user tests'));
     await page.getByText('Add task').click();
     await page.getByPlaceholder('Task name').fill(taskName);

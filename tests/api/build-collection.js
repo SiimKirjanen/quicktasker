@@ -1193,6 +1193,7 @@ const userPageTasks = folder("Tasks", [
   pm.expect(data.assignedTasksCount).to.eql(1);
   pm.expect(data.assignableTaskCount).to.be.at.least(1);
 });`,
+      `pm.test('reports that the user has boards', () => pm.expect(pm.response.json().data.hasBoards).to.eql(true));`,
     ],
   }),
   userPageRequest({
@@ -1442,6 +1443,7 @@ const userPageBoardAccess = folder("Board access", [
   pm.expect(data.assignedTasksCount).to.eql(0);
   pm.expect(data.assignableTaskCount).to.eql(0);
 });`,
+      `pm.test('reports that the user has no boards', () => pm.expect(pm.response.json().data.hasBoards).to.eql(false));`,
     ],
   }),
   userPageRequest({

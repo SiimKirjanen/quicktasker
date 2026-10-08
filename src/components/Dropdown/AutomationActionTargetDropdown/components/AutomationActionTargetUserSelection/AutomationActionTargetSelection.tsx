@@ -3,7 +3,7 @@ import { useState } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { isWPUser } from "../../../../../guards/user-guard";
 import { User, UserTypes, WPUser } from "../../../../../types/user";
-import { canWPUserAccessPipeline } from "../../../../../utils/user";
+import { canUserAccessPipeline } from "../../../../../utils/user";
 import { WPQTInput } from "../../../../common/Input/Input";
 import { QuickTaskerIcon } from "../../../../Icon/QuickTaskerIcon/QuickTaskerIcon";
 import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
@@ -11,7 +11,7 @@ import { WordPressIcon } from "../../../../Icon/WordPressIcon/WordPressIcon";
 type Props = {
   quickTaskerUsers: User[];
   wpUsers: WPUser[];
-  // WordPress users who have not been added to this board cannot be picked.
+  // Users who have not been added to this board cannot be picked.
   pipelineId?: string;
   assignUser: (target: User | WPUser) => void;
 };
@@ -35,7 +35,7 @@ function AutomationActionTargetUserSelection({
     typeFilter === "all" || user.user_type === typeFilter;
 
   const hasBoardAccess = (user: User | WPUser) =>
-    !pipelineId || !isWPUser(user) || canWPUserAccessPipeline(user, pipelineId);
+    !pipelineId || canUserAccessPipeline(user, pipelineId);
 
   const combinedUsers: (User | WPUser)[] = [...wpUsers, ...quickTaskerUsers];
   const matchingUsers = combinedUsers

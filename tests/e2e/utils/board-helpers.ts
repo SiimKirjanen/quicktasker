@@ -191,6 +191,17 @@ export async function selectBoard(page: Page, boardName: string): Promise<void> 
 }
 
 /**
+ * Load the admin app again and open a board, so data changed through the API,
+ * like the boards a user has been added to, is loaded.
+ */
+export async function reloadBoard(page: Page, boardName: string): Promise<void> {
+  await page.goto('/wp-admin/admin.php?page=wp-quicktasker');
+  await expect(page.getByTestId('pipeline-selection-dropdown')).toBeVisible();
+  await selectBoard(page, boardName);
+  await expect(page.getByTestId('active-pipeline-name')).toHaveText(boardName);
+}
+
+/**
  * Mark a board as the current user's primary board from the pipeline selection dropdown.
  */
 export async function setPrimaryBoard(page: Page, boardName: string): Promise<void> {

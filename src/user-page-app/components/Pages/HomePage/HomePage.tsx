@@ -39,6 +39,17 @@ function HomePage() {
     >
       <PageContentWrap>
         <div className="wpqt-flex wpqt-flex-col wpqt-items-center wpqt-justify-center wpqt-gap-2">
+          {overview && !overview.hasBoards && (
+            <div
+              className="wpqt-mb-5 wpqt-max-w-sm wpqt-text-center wpqt-text-yellow-700"
+              data-testid="tasks-app-no-boards"
+            >
+              {__(
+                "You have not been added to any boards yet. Ask an administrator to add you to a board.",
+                "quicktasker",
+              )}
+            </div>
+          )}
           <div>
             {__("Assigned tasks:", "quicktasker")}{" "}
             {overview?.assignedTasksCount}

@@ -2,11 +2,13 @@ import { test, expect, Browser, BrowserContext, APIRequestContext, Page } from '
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   createBoard,
+  createBoardViaApi,
   createStage,
   createTask,
   deleteBoardViaApi,
   generateUniqueName,
   getTaskCard,
+  reloadBoard,
 } from './utils/board-helpers';
 import { addComment } from './utils/comment-helpers';
 import {
@@ -545,6 +547,32 @@ test.describe('Tasks App – QuickTasker User First Login Flow', () => {
   });
 });
 
+test.describe('Tasks App – Board Access', () => {
+  test('a QuickTasker without boards is told to ask to be added to one', async ({ page, browser, request }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const userName = generateUniqueName('TA-NB-User');
+    const boardName = generateUniqueName('TA-NB-Board');
+    const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, 'qt-pass-123');
+
+    try {
+      const noBoards = userPage.getByTestId('tasks-app-no-boards');
+      await expect(noBoards).toHaveText(
+        'You have not been added to any boards yet. Ask an administrator to add you to a board.',
+        { timeout: TIMEOUTS.NAVIGATION },
+      );
+
+      await createBoardViaApi(request, boardName);
+      await addQuickTaskerToBoardsByName(request, userName, [boardName]);
+      await userPage.goto(userPageUrl);
+      await expect(userPage.getByText(/Assigned tasks:/)).toBeVisible({ timeout: TIMEOUTS.NAVIGATION });
+      await expect(noBoards).toHaveCount(0);
+    } finally {
+      await context.close();
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+});
+
 test.describe('Tasks App – Revoked QuickTasker Access', () => {
   test('deleting an active user revokes their session and blocks logging in again', async ({ page, browser, request }) => {
     test.setTimeout(TIMEOUTS.LONG_TEST);
@@ -557,6 +585,7 @@ test.describe('Tasks App – Revoked QuickTasker Access', () => {
     const { context, userPage, userPageUrl } = await createLoggedInQuickTasker(page, browser, userName, password);
     await setupBoardWithTask(page, boardName, stageName, taskName);
     await addQuickTaskerToBoardsByName(request, userName, [boardName]);
+    await reloadBoard(page, boardName);
     await assignQuickTaskerToTask(page, taskName, userName);
 
     // The logged-in QuickTasker user sees their assigned task

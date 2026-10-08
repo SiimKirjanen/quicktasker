@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T11:53:54+00:00\n"
+"POT-Creation-Date: 2026-10-08T12:25:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quicktasker\n"
@@ -108,7 +108,7 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:694
-#: php/api/user-page-api.php:1051
+#: php/api/user-page-api.php:1055
 #, php-format
 msgid "Stage was changed for task \"%s\""
 msgstr ""
@@ -139,14 +139,14 @@ msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1362
-#: php/api/user-page-api.php:1159
+#: php/api/user-page-api.php:1163
 #, php-format
 msgid "Task \"%s\" was marked done"
 msgstr ""
 
 #. translators: %s = task name
 #: php/api/admin-api.php:1364
-#: php/api/user-page-api.php:1161
+#: php/api/user-page-api.php:1165
 #, php-format
 msgid "Task \"%s\" was marked not done"
 msgstr ""
@@ -168,20 +168,20 @@ msgid "No valid settings provided"
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:451
+#: php/api/user-page-api.php:455
 #: php/services/CommentService.php:115
 #, php-format
 msgid "A public comment was added to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:820
+#: php/api/user-page-api.php:824
 #, php-format
 msgid "A user was assigned to task \"%s\""
 msgstr ""
 
 #. translators: %s = task name
-#: php/api/user-page-api.php:939
+#: php/api/user-page-api.php:943
 #, php-format
 msgid "A user was unassigned from task \"%s\""
 msgstr ""
@@ -1343,7 +1343,7 @@ msgid "Assign users"
 msgstr ""
 
 #: build/app.js:1
-msgid "WordPress users need the \"Access to plugin admin area\" permission and must be added to the board to be assignable."
+msgid "Users must be added to the board to be assignable. WordPress users also need the \"Access to plugin admin area\" permission."
 msgstr ""
 
 #: build/app.js:1
@@ -2481,34 +2481,6 @@ msgid "Edit user"
 msgstr ""
 
 #: build/app.js:1
-msgid "Open tasks app"
-msgstr ""
-
-#: build/app.js:1
-msgid "View user details"
-msgstr ""
-
-#: build/app.js:1
-msgid "Disabled"
-msgstr ""
-
-#: build/app.js:1
-msgid "Ban"
-msgstr ""
-
-#: build/app.js:1
-msgid "Banned (spam)"
-msgstr ""
-
-#: build/app.js:1
-msgid "Search by name"
-msgstr ""
-
-#: build/app.js:1
-msgid "QuickTaskers are plugin-managed users, separate from WordPress accounts, who access tasks through the tasks app."
-msgstr ""
-
-#: build/app.js:1
 #, js-format
 msgid "%d API token"
 msgid_plural "%d API tokens"
@@ -2623,6 +2595,34 @@ msgstr ""
 
 #: build/app.js:1
 msgid "Saving boards"
+msgstr ""
+
+#: build/app.js:1
+msgid "Open tasks app"
+msgstr ""
+
+#: build/app.js:1
+msgid "View user details"
+msgstr ""
+
+#: build/app.js:1
+msgid "Disabled"
+msgstr ""
+
+#: build/app.js:1
+msgid "Ban"
+msgstr ""
+
+#: build/app.js:1
+msgid "Banned (spam)"
+msgstr ""
+
+#: build/app.js:1
+msgid "Search by name"
+msgstr ""
+
+#: build/app.js:1
+msgid "QuickTaskers are plugin-managed users, separate from WordPress accounts, who access tasks through the tasks app."
 msgstr ""
 
 #: build/app.js:1
@@ -3018,6 +3018,10 @@ msgstr ""
 
 #: build/userApp.js:1
 msgid "Assignable tasks"
+msgstr ""
+
+#: build/userApp.js:1
+msgid "You have not been added to any boards yet. Ask an administrator to add you to a board."
 msgstr ""
 
 #: build/userApp.js:1

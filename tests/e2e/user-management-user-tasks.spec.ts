@@ -1,5 +1,5 @@
 import { test, expect, APIRequestContext, Page } from '@playwright/test';
-import { generateUniqueName, createBoard, createStage, createTask } from './utils/board-helpers';
+import { generateUniqueName, createBoard, createStage, createTask, reloadBoard } from './utils/board-helpers';
 import { navigateToBoardsPage } from './utils/navigation';
 import {
   navigateToQuickTaskersTab,
@@ -31,6 +31,7 @@ async function setupUserWithTask(
   await createStage(page, stageName);
   await createTask(page, stageName, taskName);
   await addQuickTaskerToBoardsByName(request, userName, [boardName]);
+  await reloadBoard(page, boardName);
   await assignQuickTaskerToTask(page, taskName, userName);
 
   // Navigate back to the QuickTaskers tab ready for the test

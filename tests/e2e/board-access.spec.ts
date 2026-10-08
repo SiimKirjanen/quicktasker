@@ -9,7 +9,7 @@ import {
   deleteBoardViaApi,
   generateUniqueName,
   getTaskCard,
-  selectBoard,
+  reloadBoard,
 } from './utils/board-helpers';
 import { loginToWordPressViaApi } from './utils/auth';
 import {
@@ -20,7 +20,9 @@ import {
   assignWPUserToTaskViaApi,
   createQuickTaskerUserViaApi,
   createWPUser,
+  getQuickTaskerCard,
   grantWPUserCaps,
+  navigateToQuickTaskersTab,
   openUserAssignmentDropdown,
   uniqueLogin,
 } from './utils/user-helpers';
@@ -37,12 +39,6 @@ import { runWpCli } from './utils/wp-cli';
  * boards they have been added to, and only see those boards.
  */
 
-async function openBoard(page: Page, boardName: string) {
-  await navigateToBoardsPage(page);
-  await selectBoard(page, boardName);
-  await expect(page.getByTestId('active-pipeline-name')).toHaveText(boardName);
-}
-
 test.describe('Board access', () => {
   test('only WordPress users added to the board can be assigned to its tasks', async ({ page, request }) => {
     test.setTimeout(TIMEOUTS.LONG_TEST);
@@ -55,7 +51,7 @@ test.describe('Board access', () => {
     await grantWPUserCaps(request, userId, ['quicktasker_admin_role']);
 
     try {
-      await openBoard(page, boardName);
+      await reloadBoard(page, boardName);
       await createTask(page, stageName, taskName);
 
       await openUserAssignmentDropdown(page, taskName);
@@ -67,13 +63,13 @@ test.describe('Board access', () => {
       ).toContainText('Not added to this board');
 
       await addWPUserToBoards(request, userId, [boardName]);
-      await openBoard(page, boardName);
+      await reloadBoard(page, boardName);
       await assignWordPressUserToTask(page, taskName, userLogin);
       await expect(getTaskCard(page, taskName).getByTestId('no-board-access-warning')).toHaveCount(0);
 
       // Removing the user from the board keeps them assigned, but marks them.
       await addWPUserToBoards(request, userId, []);
-      await openBoard(page, boardName);
+      await reloadBoard(page, boardName);
       await expect(getTaskCard(page, taskName).getByTestId('no-board-access-warning')).toBeVisible();
     } finally {
       await deleteBoardViaApi(request, boardName);
@@ -507,6 +503,123 @@ test.describe('Board access', () => {
       });
     } finally {
       await deleteBoardViaApi(request, boardName);
+    }
+  });
+});
+
+test.describe('QuickTasker board access', () => {
+  test('an administrator adds a QuickTasker to a board from their card, which makes them assignable there', async ({
+    page,
+    request,
+  }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const boardName = generateUniqueName('QBA-Add-Board');
+    const board = await createBoardViaApi(request, boardName, generateUniqueName('QBA-Add-Stage'));
+    const taskName = generateUniqueName('QBA-Add-Task');
+    await createTaskViaApi(request, board.boardId, board.stageId!, taskName);
+    const userName = generateUniqueName('QBA-Add-QT');
+    await createQuickTaskerUserViaApi(request, userName);
+
+    try {
+      // Not on the board yet, so they cannot be assigned.
+      await reloadBoard(page, boardName);
+      await openUserAssignmentDropdown(page, taskName);
+      const notAddedRow = page
+        .getByTestId('user-assignment-list')
+        .getByTestId('user-assignment-row-no-board-access')
+        .filter({ hasText: userName });
+      await expect(notAddedRow).toContainText('Not added to this board');
+
+      await navigateToQuickTaskersTab(page);
+      const card = getQuickTaskerCard(page, userName);
+      const boardsSummary = card.getByTestId('quicktasker-boards-summary');
+      await expect(boardsSummary).toHaveText('No boards');
+
+      await card.getByTestId('quicktasker-boards-change').click();
+      await page.getByRole('option', { name: boardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(boardsSummary).toHaveText(boardName);
+      await expect(page.getByText(`${userName} was added to ${boardName}.`)).toBeVisible();
+      // Changing boards does not open the card's edit modal.
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(card.getByTestId('quicktasker-boards-saving')).toHaveCount(0);
+
+      // The board is kept after loading the page again.
+      await navigateToQuickTaskersTab(page);
+      await expect(getQuickTaskerCard(page, userName).getByTestId('quicktasker-boards-summary')).toHaveText(
+        boardName,
+      );
+
+      await reloadBoard(page, boardName);
+      await openUserAssignmentDropdown(page, taskName);
+      const list = page.getByTestId('user-assignment-list');
+      await list.getByTestId('user-assignment-row').filter({ hasText: userName }).click();
+      await expect(list.getByTestId('user-assignment-row-assigned').filter({ hasText: userName })).toBeVisible();
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('removing a QuickTasker from a board warns about their tasks there and marks them on the task', async ({
+    page,
+    request,
+  }) => {
+    test.setTimeout(TIMEOUTS.LONG_TEST);
+    const boardName = generateUniqueName('QBA-Remove-Board');
+    const board = await createBoardViaApi(request, boardName, generateUniqueName('QBA-Remove-Stage'));
+    const taskName = generateUniqueName('QBA-Remove-Task');
+    const task = await createTaskViaApi(request, board.boardId, board.stageId!, taskName);
+    const userName = generateUniqueName('QBA-Remove-QT');
+    const userId = await createQuickTaskerUserViaApi(request, userName);
+    await addQuickTaskerToBoards(request, userId, [boardName]);
+    await assignQuickTaskerToTaskViaApi(request, userId, task.id);
+
+    try {
+      await navigateToQuickTaskersTab(page);
+      const card = getQuickTaskerCard(page, userName);
+      await expect(card.getByTestId('quicktasker-boards-summary')).toHaveText(boardName);
+
+      await card.getByTestId('quicktasker-boards-change').click();
+      await page.getByRole('option', { name: boardName }).click();
+      await page.keyboard.press('Escape');
+      await expect(card.getByTestId('quicktasker-boards-summary')).toHaveText('No boards');
+      await expect(
+        page.getByText(
+          `${userName} is still assigned to 1 task on ${boardName}, but can't see it until added back to the board.`,
+        ),
+      ).toBeVisible();
+
+      await reloadBoard(page, boardName);
+      const taskCard = getTaskCard(page, taskName);
+      await expect(taskCard.getByTestId('no-board-access-warning')).toBeVisible();
+      await openUserAssignmentDropdown(page, taskName);
+      await expect(
+        page
+          .getByTestId('user-assignment-list')
+          .getByTestId('user-assignment-row-assigned')
+          .filter({ hasText: userName }),
+      ).toContainText('No access to this board');
+    } finally {
+      await deleteBoardViaApi(request, boardName);
+    }
+  });
+
+  test('only administrators see and change the boards of QuickTaskers', async ({ browser, request }) => {
+    const userName = generateUniqueName('QBA-Manager-QT');
+    await createQuickTaskerUserViaApi(request, userName);
+    const managerLogin = uniqueLogin('qtmanager');
+    const managerId = await createWPUser(request, managerLogin, `${managerLogin}@example.com`, 'editor');
+    await grantWPUserCaps(request, managerId, ['quicktasker_admin_role', 'quicktasker_admin_role_manage_users']);
+    const context = await loginToWordPressViaApi(browser, managerLogin);
+
+    try {
+      const managerPage = await context.newPage();
+      await navigateToQuickTaskersTab(managerPage);
+      const card = getQuickTaskerCard(managerPage, userName);
+      await expect(card).toBeVisible();
+      await expect(card.getByTestId('quicktasker-boards')).toHaveCount(0);
+    } finally {
+      await context.close();
     }
   });
 });
