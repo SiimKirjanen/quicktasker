@@ -7,6 +7,7 @@ FILES_TO_REMOVE=(
     ".prettierrc"
     ".vscode"
     ".github"
+    ".wordpress-org"
     ".git"
     ".husky"
     ".gitignore"
