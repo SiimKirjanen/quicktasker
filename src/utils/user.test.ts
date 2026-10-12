@@ -6,7 +6,7 @@ import {
   WPUser,
 } from "../types/user";
 import {
-  canWPUserAccessPipeline,
+  canUserAccessPipeline,
   convertExtendedUserFromServer,
   convertUserFromServer,
   convertUserPageUserFromServer,
@@ -266,7 +266,7 @@ describe("user utilities", () => {
   });
 });
 
-describe("canWPUserAccessPipeline", () => {
+describe("canUserAccessPipeline", () => {
   const wpUser = (overrides: Partial<WPUser> = {}): WPUser => ({
     id: "1",
     name: "Bob",
@@ -281,28 +281,43 @@ describe("canWPUserAccessPipeline", () => {
   });
 
   it("allows boards the user has been added to", () => {
-    expect(canWPUserAccessPipeline(wpUser({ pipeline_ids: [3, 5] }), "5")).toBe(
+    expect(canUserAccessPipeline(wpUser({ pipeline_ids: [3, 5] }), "5")).toBe(
       true,
     );
   });
 
   it("denies other boards", () => {
-    expect(canWPUserAccessPipeline(wpUser({ pipeline_ids: [3] }), "5")).toBe(
+    expect(canUserAccessPipeline(wpUser({ pipeline_ids: [3] }), "5")).toBe(
       false,
     );
   });
 
   it("denies every board when the user's boards are unknown", () => {
-    expect(canWPUserAccessPipeline(wpUser(), "5")).toBe(false);
+    expect(canUserAccessPipeline(wpUser(), "5")).toBe(false);
   });
 
   it("allows every board for administrators", () => {
     expect(
-      canWPUserAccessPipeline(
+      canUserAccessPipeline(
         wpUser({ pipeline_ids: [], can_access_all_pipelines: true }),
         "5",
       ),
     ).toBe(true);
+  });
+
+  it("allows a QuickTasker only the boards they have been added to", () => {
+    const quicktasker = convertUserFromServer(
+      createMockServerUser({ pipeline_ids: [2, 5] }),
+    );
+
+    expect(canUserAccessPipeline(quicktasker, "5")).toBe(true);
+    expect(canUserAccessPipeline(quicktasker, "3")).toBe(false);
+  });
+
+  it("denies a QuickTasker every board when their boards are unknown", () => {
+    expect(
+      canUserAccessPipeline(convertUserFromServer(createMockServerUser()), "5"),
+    ).toBe(false);
   });
 });
 

@@ -5,10 +5,15 @@ type BaseUser = {
   name: string;
   description: string;
   created_at: string;
-  // Only sent to users who can manage QuickTaskers.
+  // Only sent when the viewer can manage this QuickTasker.
   page_hash?: string;
+  // Whether the viewer can manage this QuickTasker, like editing them or resetting their password.
+  // False when the QuickTasker is on boards the viewer has not been added to. Missing on a user that was just created.
+  can_manage?: boolean;
   assigned_tasks_count: string;
   user_type: UserTypes.QUICKTASKER;
+  // The boards the user has been added to. Missing on a user that was just created.
+  pipeline_ids?: number[];
 };
 
 type User = BaseUser & {
@@ -65,7 +70,7 @@ type PipelineIntegrationCount = {
   automation_count: number;
 };
 
-type WPUserPipelinesUpdate = {
+type UserPipelinesUpdate = {
   // All the boards the user is on after the update, including ones the request did not mention.
   pipeline_ids: number[];
   added_pipeline_ids: number[];
@@ -75,6 +80,11 @@ type WPUserPipelinesUpdate = {
     task_count: number;
   }[];
   // API tokens, webhooks and sending automations the user created on the removed boards, which don't work without access to them.
+  // Only WordPress users can create them.
+  stopped_integrations?: PipelineIntegrationCount[];
+};
+
+type WPUserPipelinesUpdate = UserPipelinesUpdate & {
   stopped_integrations: PipelineIntegrationCount[];
 };
 
@@ -104,6 +114,7 @@ export type {
   User,
   UserEditData,
   UserFilter,
+  UserPipelinesUpdate,
   WPUser,
   WPUserCapabilitiesUpdate,
   WPUserPipelinesUpdate,

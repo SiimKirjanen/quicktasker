@@ -8,7 +8,7 @@ import { isWPUser } from "../../../guards/user-guard";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { Task } from "../../../types/task";
 import { User, WPUser } from "../../../types/user";
-import { canWPUserAccessPipeline } from "../../../utils/user";
+import { canUserAccessPipeline } from "../../../utils/user";
 
 import { WPQTDropdown } from "../WPQTDropdown";
 import { UserAssignementSelection } from "./components/UserAssignementSelection/UserAssignementSelection";
@@ -27,7 +27,7 @@ function UserAssignementDropdown({
   menuBtnClasses = "",
 }: Props) {
   const {
-    state: { wpUsers },
+    state: { users, wpUsers },
   } = useContext(UserContext);
   const combinedUsers = [
     ...(task.assigned_users || []),
@@ -35,14 +35,14 @@ function UserAssignementDropdown({
   ];
   const hasAssignedUsers = combinedUsers.length > 0;
 
-  // Assigned users carry no board access, so it is read from the known WordPress users.
+  // Assigned users carry no board access, so it is read from the known users.
   const lacksBoardAccess = (user: User | WPUser) => {
-    if (!isWPUser(user)) {
-      return false;
-    }
-    const wpUser = wpUsers.find((u) => u.id === String(user.id));
+    const knownUsers: (User | WPUser)[] = isWPUser(user) ? wpUsers : users;
+    const knownUser = knownUsers.find((u) => u.id === String(user.id));
 
-    return wpUser ? !canWPUserAccessPipeline(wpUser, task.pipeline_id) : false;
+    return knownUser
+      ? !canUserAccessPipeline(knownUser, task.pipeline_id)
+      : false;
   };
 
   return (

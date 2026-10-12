@@ -103,6 +103,50 @@ export async function createQuickTaskerUserViaApi(
 }
 
 /**
+ * Add a QuickTasker user to boards via the plugin REST API, as the admin.
+ * Keeps the boards the user was added to before.
+ */
+export async function addQuickTaskerToBoards(
+  request: APIRequestContext,
+  userId: string,
+  boardNames: string[],
+): Promise<void> {
+  const headers = { 'X-WP-Nonce': await getAdminNonce(request) };
+  const list = await request.get('/wp-json/wpqt/v1/pipelines', { headers });
+  if (!list.ok()) throw new Error(`Failed to list boards: ${await list.text()}`);
+  const boards: { id: string; name: string }[] = (await list.json()).data;
+  const boardIds = boardNames.map((name) => {
+    const board = boards.find((b) => b.name === name);
+    if (!board) throw new Error(`Board not found: ${name}`);
+    return board.id;
+  });
+  const response = await request.patch(`/wp-json/wpqt/v1/users/${userId}/pipelines`, {
+    headers,
+    data: { add_pipeline_ids: boardIds },
+  });
+  if (!response.ok()) throw new Error(`Failed to add QuickTasker to boards: ${await response.text()}`);
+}
+
+/**
+ * Add a QuickTasker user, found by name, to boards via the plugin REST API, as the admin.
+ * For users created through the UI, whose ID the test does not know.
+ */
+export async function addQuickTaskerToBoardsByName(
+  request: APIRequestContext,
+  userName: string,
+  boardNames: string[],
+): Promise<void> {
+  const response = await request.get('/wp-json/wpqt/v1/users', {
+    headers: { 'X-WP-Nonce': await getAdminNonce(request) },
+  });
+  if (!response.ok()) throw new Error(`Failed to list QuickTaskers: ${await response.text()}`);
+  const users: { id: string; name: string }[] = (await response.json()).data;
+  const user = users.find((u) => u.name === userName);
+  if (!user) throw new Error(`QuickTasker not found: ${userName}`);
+  await addQuickTaskerToBoards(request, String(user.id), boardNames);
+}
+
+/**
  * Assign a QuickTasker user to a task via the plugin REST API, as the admin.
  */
 export async function assignQuickTaskerToTaskViaApi(

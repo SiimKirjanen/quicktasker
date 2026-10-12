@@ -29,8 +29,14 @@ jest.mock("../../components/common/Header/Header", () => ({
 }));
 
 jest.mock("../../components/Tab/WPQTTabs", () => ({
-  WPQTTabs: ({ tabs }: { tabs: { name: string }[] }) => (
-    <div data-testid="tabs">
+  WPQTTabs: ({
+    tabs,
+    defaultIndex,
+  }: {
+    tabs: { name: string }[];
+    defaultIndex?: number;
+  }) => (
+    <div data-testid="tabs" data-selected={tabs[defaultIndex ?? 0].name}>
       {tabs.map((tab) => (
         <span key={tab.name}>{tab.name}</span>
       ))}
@@ -70,6 +76,7 @@ type CtxOverrides = {
   modalDispatch?: jest.Mock;
   loadingDispatch?: jest.Mock;
   isUserAllowedToManageWPUsers?: boolean;
+  showQuickTaskers?: boolean;
 };
 
 function renderPage({
@@ -78,6 +85,7 @@ function renderPage({
   modalDispatch = jest.fn(),
   loadingDispatch = jest.fn(),
   isUserAllowedToManageWPUsers = true,
+  showQuickTaskers = false,
 }: CtxOverrides = {}) {
   const result = render(
     <AppContext.Provider
@@ -98,7 +106,7 @@ function renderPage({
               updateWPUsers,
             }}
           >
-            <UserManagement />
+            <UserManagement showQuickTaskers={showQuickTaskers} />
           </UserContext.Provider>
         </ModalContext.Provider>
       </LoadingContext.Provider>
@@ -223,6 +231,35 @@ describe("UserManagement", () => {
 
     expect(screen.getByText("WordPress users")).toBeInTheDocument();
     expect(screen.getByText("QuickTaskers")).toBeInTheDocument();
+    expect(screen.getByTestId("tabs")).toHaveAttribute(
+      "data-selected",
+      "WordPress users",
+    );
+  });
+
+  it("opens the QuickTaskers tab when asked to", async () => {
+    await act(async () => {
+      renderPage({ showQuickTaskers: true });
+    });
+
+    expect(screen.getByTestId("tabs")).toHaveAttribute(
+      "data-selected",
+      "QuickTaskers",
+    );
+  });
+
+  it("opens the only tab, QuickTaskers, for users who cannot manage WordPress users", async () => {
+    await act(async () => {
+      renderPage({
+        isUserAllowedToManageWPUsers: false,
+        showQuickTaskers: true,
+      });
+    });
+
+    expect(screen.getByTestId("tabs")).toHaveAttribute(
+      "data-selected",
+      "QuickTaskers",
+    );
   });
 
   describe("without permission to manage WordPress users", () => {

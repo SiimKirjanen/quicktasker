@@ -114,11 +114,13 @@ describe("AutomationActionTarget Component", () => {
       ).toBeNull();
     });
 
-    test("does not warn for QuickTasker users", () => {
+    function renderQuicktaskerTarget(pipelineIds: number[]) {
       mockUseUser.mockReturnValue({
-        getUser: jest
-          .fn()
-          .mockReturnValue({ name: "Quinn", user_type: UserTypes.QUICKTASKER }),
+        getUser: jest.fn().mockReturnValue({
+          name: "Quinn",
+          user_type: UserTypes.QUICKTASKER,
+          pipeline_ids: pipelineIds,
+        }),
         combinedUsers: [],
       });
 
@@ -129,6 +131,20 @@ describe("AutomationActionTarget Component", () => {
           pipelineId="1"
         />,
       );
+    }
+
+    test("warns when the QuickTasker user has not been added to the board", () => {
+      renderQuicktaskerTarget([2]);
+
+      expect(
+        screen.getByTestId("automation-target-no-board-access"),
+      ).toHaveTextContent(
+        "Not added to this board, so the automation cannot assign them",
+      );
+    });
+
+    test("does not warn when the QuickTasker user has been added to the board", () => {
+      renderQuicktaskerTarget([1]);
 
       expect(
         screen.queryByTestId("automation-target-no-board-access"),

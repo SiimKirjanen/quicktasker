@@ -8,6 +8,10 @@ if (!defined('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES')) {
     define('TABLE_WP_QUICKTASKER_WP_USER_PIPELINES', 'wp_quicktasker_wp_user_pipelines');
 }
 
+if (!defined('TABLE_WP_QUICKTASKER_USER_PIPELINES')) {
+    define('TABLE_WP_QUICKTASKER_USER_PIPELINES', 'wp_quicktasker_user_pipelines');
+}
+
 if (!defined('TABLE_WP_QUICKTASKER_PIPELINES')) {
     define('TABLE_WP_QUICKTASKER_PIPELINES', 'wp_quicktasker_pipelines');
 }
@@ -153,14 +157,95 @@ class PipelineAccessRepositoryTest extends TestCase
     {
         $this->wpdbMock->expects($this->once())
             ->method('get_results')
-            ->with($this->stringContains('WHERE wp_user_id IN (7,8,9)'))
+            ->with($this->logicalAnd(
+                $this->stringContains('SELECT wp_user_id AS user_id, pipeline_id FROM wp_quicktasker_wp_user_pipelines'),
+                $this->stringContains('WHERE wp_user_id IN (7,8,9)')
+            ))
             ->willReturn([
-                (object) ['wp_user_id' => '7', 'pipeline_id' => '2'],
-                (object) ['wp_user_id' => '9', 'pipeline_id' => '2'],
-                (object) ['wp_user_id' => '7', 'pipeline_id' => '4'],
+                (object) ['user_id' => '7', 'pipeline_id' => '2'],
+                (object) ['user_id' => '9', 'pipeline_id' => '2'],
+                (object) ['user_id' => '7', 'pipeline_id' => '4'],
             ]);
 
         $this->assertSame([7 => [2, 4], 9 => [2]], $this->repository->getPipelineIdsByWPUserIds([7, 8, 9]));
+    }
+
+    public function test_getPipelineIdsByQuicktaskerUserId_reads_the_quicktasker_users_boards()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_col')
+            ->with($this->logicalAnd(
+                $this->stringContains('FROM wp_quicktasker_user_pipelines'),
+                $this->stringContains('WHERE user_id = 7')
+            ))
+            ->willReturn(['3']);
+
+        $this->assertSame([3], $this->repository->getPipelineIdsByQuicktaskerUserId(7));
+    }
+
+    public function test_getPipelineIdsByQuicktaskerUserIds_groups_board_ids_by_user()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('get_results')
+            ->with($this->logicalAnd(
+                $this->stringContains('SELECT user_id AS user_id, pipeline_id FROM wp_quicktasker_user_pipelines'),
+                $this->stringContains('WHERE user_id IN (4,5)')
+            ))
+            ->willReturn([
+                (object) ['user_id' => '5', 'pipeline_id' => '1'],
+            ]);
+
+        $this->assertSame([5 => [1]], $this->repository->getPipelineIdsByQuicktaskerUserIds([4, 5]));
+    }
+
+    public function test_getPipelineIdsByQuicktaskerUserIds_skips_the_query_without_users()
+    {
+        $this->wpdbMock->expects($this->never())->method('get_results');
+
+        $this->assertSame([], $this->repository->getPipelineIdsByQuicktaskerUserIds([]));
+    }
+
+    public function test_addQuicktaskerUserToPipeline_ignores_an_existing_row()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('query')
+            ->with($this->logicalAnd(
+                $this->stringContains('INSERT IGNORE INTO wp_quicktasker_user_pipelines'),
+                $this->stringContains('(user_id, pipeline_id, created_at)'),
+                $this->stringContains("VALUES (7, 3, '2026-01-01 00:00:00')")
+            ))
+            ->willReturn(1);
+
+        $this->repository->addQuicktaskerUserToPipeline(7, 3);
+    }
+
+    public function test_removeQuicktaskerUserFromPipeline_deletes_the_users_row_for_the_board()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('delete')
+            ->with('wp_quicktasker_user_pipelines', ['user_id' => 7, 'pipeline_id' => 3], ['%d', '%d'])
+            ->willReturn(1);
+
+        $this->repository->removeQuicktaskerUserFromPipeline(7, 3);
+    }
+
+    public function test_deleteQuicktaskerUserAccess_deletes_every_row_of_the_user()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('delete')
+            ->with('wp_quicktasker_user_pipelines', ['user_id' => 7], ['%d'])
+            ->willReturn(2);
+
+        $this->repository->deleteQuicktaskerUserAccess(7);
+    }
+
+    public function test_deleteQuicktaskerUserAccess_throws_when_the_delete_fails()
+    {
+        $this->wpdbMock->method('delete')->willReturn(false);
+
+        $this->expectException(\Exception::class);
+
+        $this->repository->deleteQuicktaskerUserAccess(7);
     }
 
     public function test_getPipelineIdsByWPUserIds_skips_the_query_without_users()
@@ -211,13 +296,23 @@ class PipelineAccessRepositoryTest extends TestCase
         $this->repository->removeWPUserFromPipeline(7, 3);
     }
 
-    public function test_deletePipelineAccess_deletes_every_row_of_the_board()
+    public function test_deletePipelineAccess_deletes_every_row_of_the_board_for_both_user_types()
     {
-        $this->wpdbMock->expects($this->once())
+        $deleted = [];
+        $this->wpdbMock->expects($this->exactly(2))
             ->method('delete')
-            ->with('wp_quicktasker_wp_user_pipelines', ['pipeline_id' => 3], ['%d']);
+            ->willReturnCallback(function ($table, $where, $format) use (&$deleted) {
+                $deleted[] = [$table, $where, $format];
+
+                return 1;
+            });
 
         $this->repository->deletePipelineAccess(3);
+
+        $this->assertSame([
+            ['wp_quicktasker_wp_user_pipelines', ['pipeline_id' => 3], ['%d']],
+            ['wp_quicktasker_user_pipelines', ['pipeline_id' => 3], ['%d']],
+        ], $deleted);
     }
 
     public function test_deleteWPUserAccess_deletes_every_row_of_the_user()

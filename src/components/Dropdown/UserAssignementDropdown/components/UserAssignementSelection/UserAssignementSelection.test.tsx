@@ -42,6 +42,7 @@ const baseUser: User = {
   is_banned: false,
   banned_at: null,
   has_password: false,
+  pipeline_ids: [1],
 };
 const baseWPUser: WPUser = {
   id: "2",
@@ -57,7 +58,7 @@ const baseWPUser: WPUser = {
 const task: Task = {
   id: "t1",
   name: "Task",
-  pipeline_id: "p1",
+  pipeline_id: "1",
   stage_id: "s1",
   description: "",
   due_date: "",
@@ -246,7 +247,11 @@ describe("UserAssignementSelection board access", () => {
     can_access_all_pipelines: true,
   };
 
-  function renderWithWPUsers(wpUsers: WPUser[], taskToRender: Task) {
+  function renderWithWPUsers(
+    wpUsers: WPUser[],
+    taskToRender: Task,
+    users: User[] = [],
+  ) {
     return render(
       <ActivePipelineContext.Provider
         value={{
@@ -261,7 +266,7 @@ describe("UserAssignementSelection board access", () => {
       >
         <UserContext.Provider
           value={{
-            state: { users: [], wpUsers, usersSearchValue: "" },
+            state: { users, wpUsers, usersSearchValue: "" },
             userDispatch: jest.fn(),
             updateUsers: jest.fn(),
             updateWPUsers: jest.fn(),
@@ -322,5 +327,83 @@ describe("UserAssignementSelection board access", () => {
         UserTypes.WP_USER,
       ),
     );
+  });
+
+  describe("QuickTasker users", () => {
+    const addedQuicktasker: User = {
+      ...baseUser,
+      id: "20",
+      name: "On board",
+      pipeline_ids: [1],
+    };
+    const notAddedQuicktasker: User = {
+      ...baseUser,
+      id: "21",
+      name: "Elsewhere",
+      pipeline_ids: [2],
+    };
+    // A user that was just created has no boards loaded.
+    const newQuicktasker: User = {
+      ...baseUser,
+      id: "22",
+      name: "Brand new",
+      pipeline_ids: undefined,
+    };
+
+    it("shows QuickTaskers not added to the board as not assignable, last", () => {
+      renderWithWPUsers([], unassignedTask, [
+        notAddedQuicktasker,
+        newQuicktasker,
+        addedQuicktasker,
+      ]);
+
+      const rows = screen.getByTestId("user-assignment-list").children;
+      expect(rows[0]).toHaveTextContent("On board");
+      expect(rows[0]).toHaveAttribute("data-testid", "user-assignment-row");
+      [rows[1], rows[2]].forEach((row) => {
+        expect(row).toHaveTextContent("Not added to this board");
+        expect(row).toHaveAttribute(
+          "data-testid",
+          "user-assignment-row-no-board-access",
+        );
+      });
+    });
+
+    it("assigns a QuickTasker added to the board but not one who is not", async () => {
+      renderWithWPUsers([], unassignedTask, [
+        notAddedQuicktasker,
+        addedQuicktasker,
+      ]);
+
+      fireEvent.click(screen.getByText("Elsewhere"));
+      expect(api.assignTaskToUserRequest).not.toHaveBeenCalled();
+
+      fireEvent.click(screen.getByText("On board"));
+      await waitFor(() =>
+        expect(api.assignTaskToUserRequest).toHaveBeenCalledWith(
+          "20",
+          "t1",
+          UserTypes.QUICKTASKER,
+        ),
+      );
+    });
+
+    it("lets an assigned QuickTasker without board access be removed", async () => {
+      renderWithWPUsers(
+        [],
+        { ...unassignedTask, assigned_users: [notAddedQuicktasker] },
+        [notAddedQuicktasker],
+      );
+
+      fireEvent.click(screen.getByText("No access to this board"));
+
+      await waitFor(() =>
+        expect(api.removeTaskFromUserRequest).toHaveBeenCalledWith(
+          "21",
+          "t1",
+          UserTypes.QUICKTASKER,
+        ),
+      );
+    });
   });
 });

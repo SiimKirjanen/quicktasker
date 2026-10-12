@@ -111,6 +111,7 @@ Routes are hash-based (append to base URL):
 - `#/board/{pipelineId}/webhooks` — Board webhooks
 - `#/board/{pipelineId}/api-tokens` — Board API tokens
 - `#/user-management` — User management
+- `#/user-management/quicktaskers` — User management, opened on the QuickTaskers tab
 - `#/user-management/{userId}` — Single user
 - `#/user-management/{userId}/tasks` — User's tasks
 - `#/tasks-app-settings` — Tasks app settings

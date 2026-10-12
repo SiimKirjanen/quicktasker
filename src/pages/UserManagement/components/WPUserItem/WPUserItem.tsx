@@ -9,11 +9,11 @@ import { usePipelines } from "../../../../hooks/usePipelines";
 import { AppContext } from "../../../../providers/AppContextProvider";
 import { WPUserCapabilities } from "../../../../types/capabilities";
 import { WPUser, WPUserCapabilitiesUpdate } from "../../../../types/user";
+import { UserPipelineAccess } from "../UserPipelineAccess/UserPipelineAccess";
 import {
   formatIntegrationCount,
   showStoppedIntegrationsWarning,
 } from "./StoppedIntegrationsWarning/StoppedIntegrationsWarning";
-import { WPUserPipelineAccess } from "./WPUserPipelineAccess/WPUserPipelineAccess";
 
 type Props = {
   user: WPUser;
@@ -224,7 +224,7 @@ function WPUserItem({ user }: Props) {
         />
       </div>
 
-      <WPUserPipelineAccess user={user} />
+      <UserPipelineAccess user={user} />
 
       {updating && <Loading ovalSize="24" />}
     </WPQTCard>

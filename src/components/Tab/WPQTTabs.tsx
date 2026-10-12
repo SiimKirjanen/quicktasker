@@ -10,15 +10,18 @@ type Props = {
   tabsContent: React.ReactNode[];
   tabListClassName?: string;
   tabClassName?: string;
+  // The tab selected first.
+  defaultIndex?: number;
 };
 function WPQTTabs({
   tabs,
   tabsContent,
   tabClassName = "",
   tabListClassName = "",
+  defaultIndex = 0,
 }: Props) {
   return (
-    <TabGroup>
+    <TabGroup defaultIndex={defaultIndex}>
       <TabList
         className={`wpqt-mb-6 wpqt-flex wpqt-border-0 wpqt-border-b wpqt-border-solid wpqt-border-b-gray-300 ${tabListClassName}`}
       >

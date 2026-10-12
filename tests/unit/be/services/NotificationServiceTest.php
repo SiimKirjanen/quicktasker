@@ -22,6 +22,9 @@ class NotificationServiceTest extends TestCase
     private $userRepo;
     private $timeRepo;
 
+    /** @var string[] "user type:user ID:board ID" of the boards users cannot access. Every other board can be accessed. */
+    private $inaccessibleBoards;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,6 +58,15 @@ class NotificationServiceTest extends TestCase
         ServiceLocator::register('UserRepository', $this->userRepo);
         ServiceLocator::register('TimeRepository', $this->timeRepo);
 
+        $this->inaccessibleBoards = [];
+        $pipelineAccessService = $this->getMockBuilder(stdClass::class)
+            ->addMethods(['canUserAccessPipeline'])
+            ->getMock();
+        $pipelineAccessService->method('canUserAccessPipeline')->willReturnCallback(function ($userId, $userType, $pipelineId) {
+            return !in_array("$userType:$userId:$pipelineId", $this->inaccessibleBoards, true);
+        });
+        ServiceLocator::register('PipelineAccessService', $pipelineAccessService);
+
         $this->service = new NotificationService();
     }
 
@@ -80,6 +92,28 @@ class NotificationServiceTest extends TestCase
         $result = $this->service->createNotification(7, 11, 'wp-user', 'hello', NotificationService::TYPE_TASK_ASSIGNMENT_CHANGED);
 
         $this->assertSame($expected, $result);
+    }
+
+    public function testCreateNotificationSkipsRecipientWithoutBoardAccess(): void
+    {
+        // Like a user removed from the board who stays assigned to its tasks.
+        $this->inaccessibleBoards = ['quicktasker:11:7'];
+
+        $this->notificationRepo->expects($this->never())->method('insertNotification');
+
+        $result = $this->service->createNotification(7, 11, 'quicktasker', 'hello', NotificationService::TYPE_DUE_DATE_CHANGED);
+
+        $this->assertNull($result);
+    }
+
+    public function testCreateNotificationChecksTheBoardOfTheRecipientsOwnType(): void
+    {
+        // A WordPress user with the same ID as the QuickTasker can't access the board, the QuickTasker can.
+        $this->inaccessibleBoards = ['wp-user:11:7'];
+
+        $this->notificationRepo->expects($this->once())->method('insertNotification')->willReturn((object) ['id' => 1]);
+
+        $this->service->createNotification(7, 11, 'quicktasker', 'hello', NotificationService::TYPE_DUE_DATE_CHANGED);
     }
 
     public function testGetNotificationsForViewerClampsTooSmallMaxAge(): void
@@ -182,10 +216,23 @@ class NotificationServiceTest extends TestCase
         $this->service->markAsRead(1, 2, 'quicktasker');
     }
 
+    public function testMarkAsReadThrowsWhenNotificationIsOnABoardTheUserCannotAccess(): void
+    {
+        $this->inaccessibleBoards = ['quicktasker:2:9'];
+        $this->notificationRepo->method('getNotificationById')
+            ->willReturn((object) ['id' => 1, 'user_id' => 2, 'user_type' => 'quicktasker', 'pipeline_id' => '9']);
+
+        $this->notificationRepo->expects($this->never())->method('markAsRead');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Notification is on a board the current user cannot access');
+
+        $this->service->markAsRead(1, 2, 'quicktasker');
+    }
+
     public function testMarkAsReadDelegatesToRepositoryWhenAuthorized(): void
     {
         $this->notificationRepo->method('getNotificationById')
-            ->willReturn((object) ['id' => 1, 'user_id' => 2, 'user_type' => 'wp-user']);
+            ->willReturn((object) ['id' => 1, 'user_id' => 2, 'user_type' => 'wp-user', 'pipeline_id' => '9']);
 
         $this->notificationRepo->expects($this->once())
             ->method('markAsRead')

@@ -42,6 +42,7 @@ import {
   ServerExtendedUser,
   ServerUser,
   UserEditData,
+  UserPipelinesUpdate,
   UserTypes,
   WPUser,
   WPUserCapabilitiesUpdate,
@@ -692,6 +693,22 @@ function updateWPUserPipelinesRequest(
     headers: getCommonHeaders(),
   });
 }
+
+function updateQuicktaskerUserPipelinesRequest(
+  userId: string,
+  addPipelineIds: string[],
+  removePipelineIds: string[],
+): Promise<WPQTResponse<UserPipelinesUpdate>> {
+  return apiFetch({
+    path: `/wpqt/v1/users/${userId}/pipelines`,
+    method: "PATCH",
+    data: {
+      add_pipeline_ids: addPipelineIds,
+      remove_pipeline_ids: removePipelineIds,
+    },
+    headers: getCommonHeaders(),
+  });
+}
 /*
   ==================================================================================================================================================================================================================
   User session requests
@@ -1304,6 +1321,7 @@ export {
   updateCustomFieldDefaultValueRequest,
   updateCustomFieldValueRequest,
   updateLabelRequest,
+  updateQuicktaskerUserPipelinesRequest,
   updateTaskFocusColorRequest,
   updateWPUserPermissionsRequest,
   updateWPUserPipelinesRequest,

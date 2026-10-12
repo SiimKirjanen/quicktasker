@@ -9,6 +9,7 @@ type AutoSaveInputProps = {
   isAutoFocus?: boolean;
   wrapperClassName?: string;
   className?: string;
+  disabled?: boolean;
 };
 
 function AutoSaveInput({
@@ -18,6 +19,7 @@ function AutoSaveInput({
   isAutoFocus = false,
   wrapperClassName,
   className,
+  disabled = false,
 }: AutoSaveInputProps) {
   const [inputValue, setInputValue] = useState(value);
   const [loading, setLoading] = useState(false);
@@ -52,7 +54,7 @@ function AutoSaveInput({
       wrapperClassName={wrapperClassName}
       className={className}
       loading={loading}
-      disabled={loading}
+      disabled={disabled || loading}
     />
   );
 }

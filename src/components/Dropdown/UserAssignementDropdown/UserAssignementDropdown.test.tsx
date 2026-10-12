@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { UserContext } from "../../../providers/UserContextProvider";
 import { Task } from "../../../types/task";
-import { UserTypes, WPUser } from "../../../types/user";
+import { User, UserTypes, WPUser } from "../../../types/user";
 import { UserAssignementDropdown } from "./UserAssignementDropdown";
 
 jest.mock("@wordpress/i18n", () => ({
@@ -36,18 +36,40 @@ function makeWPUser(id: string, name: string, pipelineIds: number[]): WPUser {
   };
 }
 
-function renderDropdown(assignedWPUsers: WPUser[], knownWPUsers: WPUser[]) {
+function makeQuicktasker(
+  id: string,
+  name: string,
+  pipelineIds: number[],
+): User {
+  return {
+    id,
+    name,
+    user_type: UserTypes.QUICKTASKER,
+    pipeline_ids: pipelineIds,
+  } as User;
+}
+
+function renderDropdown(
+  assignedWPUsers: WPUser[],
+  knownWPUsers: WPUser[],
+  assignedUsers: User[] = [],
+  knownUsers: User[] = [],
+) {
   const task = {
     id: "t1",
     pipeline_id: "1",
-    assigned_users: [],
+    assigned_users: assignedUsers,
     assigned_wp_users: assignedWPUsers,
   } as unknown as Task;
 
   return render(
     <UserContext.Provider
       value={{
-        state: { users: [], wpUsers: knownWPUsers, usersSearchValue: "" },
+        state: {
+          users: knownUsers,
+          wpUsers: knownWPUsers,
+          usersSearchValue: "",
+        },
         userDispatch: jest.fn(),
         updateUsers: jest.fn(),
         updateWPUsers: jest.fn(),
@@ -74,5 +96,23 @@ describe("UserAssignementDropdown", () => {
     renderDropdown([makeWPUser("12", "Unknown", [])], []);
 
     expect(screen.queryByTestId("no-board-access-warning")).toBeNull();
+  });
+
+  it("marks assigned QuickTaskers without access to the board", () => {
+    const added = makeQuicktasker("20", "On board", [1]);
+    const removed = makeQuicktasker("21", "Elsewhere", [2]);
+    // A WordPress user with the same ID as a QuickTasker on the board.
+    const wpUserWithSameId = makeWPUser("21", "Same ID", [1]);
+
+    renderDropdown(
+      [wpUserWithSameId],
+      [wpUserWithSameId],
+      [added, removed],
+      [added, removed],
+    );
+
+    const warnings = screen.getAllByTestId("no-board-access-warning");
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0].parentElement).toHaveTextContent("Elsewhere");
   });
 });

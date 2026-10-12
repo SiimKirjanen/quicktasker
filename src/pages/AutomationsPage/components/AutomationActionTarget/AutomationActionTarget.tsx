@@ -2,18 +2,17 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { __ } from "@wordpress/i18n";
 import { QuickTaskerIcon } from "../../../../components/Icon/QuickTaskerIcon/QuickTaskerIcon";
 import { WordPressIcon } from "../../../../components/Icon/WordPressIcon/WordPressIcon";
-import { isWPUser } from "../../../../guards/user-guard";
 import { useUser } from "../../../../hooks/useUser";
 import { ActionTargetType } from "../../../../types/automation";
 import {
-  canWPUserAccessPipeline,
+  canUserAccessPipeline,
   mapActionTargetTypeToUserType,
 } from "../../../../utils/user";
 
 type Props = {
   actionTargetId: string | null;
   actionTargetType: ActionTargetType | null;
-  // The automation's board. WordPress users must have been added to it to be assigned.
+  // The automation's board. Users must have been added to it to be assigned.
   pipelineId: string;
 };
 function AutomationActionTarget({
@@ -36,7 +35,7 @@ function AutomationActionTarget({
     if (userType) {
       const user = getUser(actionTargetId, userType);
       const lacksBoardAccess =
-        !!user && isWPUser(user) && !canWPUserAccessPipeline(user, pipelineId);
+        !!user && !canUserAccessPipeline(user, pipelineId);
 
       return (
         <div className="wpqt-flex wpqt-items-center wpqt-justify-center wpqt-gap-1">

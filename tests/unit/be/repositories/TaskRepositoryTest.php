@@ -768,30 +768,44 @@ class TaskRepositoryTest extends TestCase
         $this->assertSame($expectedTasks, $result);
     }
 
-    public function test_countTasksAssignedToWPUserByPipeline_returns_counts_keyed_by_board()
+    public function test_countTasksAssignedToUserByPipeline_returns_counts_keyed_by_board()
     {
         $this->wpdbMock->expects($this->once())
             ->method('prepare')
             ->with(
                 $this->logicalAnd(
-                    $this->stringContains("a.user_type = 'wp-user'"),
+                    $this->stringContains('a.user_id = %d'),
+                    $this->stringContains('a.user_type = %s'),
                     $this->stringContains('b.is_archived = 0'),
                     $this->stringContains('b.pipeline_id IN (%d,%d)')
                 ),
-                [7, 3, 5]
+                [7, 'wp-user', 3, 5]
             )
             ->willReturn('PREPARED');
         $this->wpdbMock->method('get_results')->willReturn([
             (object) ['pipeline_id' => '3', 'task_count' => '2'],
         ]);
 
-        $this->assertSame([3 => 2], $this->repository->countTasksAssignedToWPUserByPipeline(7, [3, 5]));
+        $this->assertSame([3 => 2], $this->repository->countTasksAssignedToUserByPipeline(7, 'wp-user', [3, 5]));
     }
 
-    public function test_countTasksAssignedToWPUserByPipeline_skips_the_query_without_boards()
+    public function test_countTasksAssignedToUserByPipeline_counts_quicktasker_assignments()
+    {
+        $this->wpdbMock->expects($this->once())
+            ->method('prepare')
+            ->with($this->anything(), [4, 'quicktasker', 2])
+            ->willReturn('PREPARED');
+        $this->wpdbMock->method('get_results')->willReturn([
+            (object) ['pipeline_id' => '2', 'task_count' => '1'],
+        ]);
+
+        $this->assertSame([2 => 1], $this->repository->countTasksAssignedToUserByPipeline(4, 'quicktasker', [2]));
+    }
+
+    public function test_countTasksAssignedToUserByPipeline_skips_the_query_without_boards()
     {
         $this->wpdbMock->expects($this->never())->method('get_results');
 
-        $this->assertSame([], $this->repository->countTasksAssignedToWPUserByPipeline(7, []));
+        $this->assertSame([], $this->repository->countTasksAssignedToUserByPipeline(7, 'wp-user', []));
     }
 }

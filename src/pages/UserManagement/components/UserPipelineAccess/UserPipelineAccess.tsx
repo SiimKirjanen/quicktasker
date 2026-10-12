@@ -1,25 +1,29 @@
 import { useContext, useEffect, useRef, useState } from "@wordpress/element";
 import { __, _n, sprintf } from "@wordpress/i18n";
 import { toast } from "react-toastify";
-import { WPQTMultiSelect } from "../../../../../components/common/Select/WPQTMultiSelect";
-import { LoadingOval } from "../../../../../components/Loading/Loading";
-import { SET_WP_USER_PIPELINE_IDS } from "../../../../../constants";
-import { useWPUserPipelineActions } from "../../../../../hooks/actions/useWPUserPipelineActions";
-import { useMissingResourceDetection } from "../../../../../hooks/useMissingResourceDetection";
-import { usePipelines } from "../../../../../hooks/usePipelines";
-import { UserContext } from "../../../../../providers/UserContextProvider";
-import { WPUser, WPUserPipelinesUpdate } from "../../../../../types/user";
+import { WPQTMultiSelect } from "../../../../components/common/Select/WPQTMultiSelect";
+import { LoadingOval } from "../../../../components/Loading/Loading";
+import {
+  SET_USER_PIPELINE_IDS,
+  SET_WP_USER_PIPELINE_IDS,
+} from "../../../../constants";
+import { isWPUser } from "../../../../guards/user-guard";
+import { useUserPipelineActions } from "../../../../hooks/actions/useUserPipelineActions";
+import { useMissingResourceDetection } from "../../../../hooks/useMissingResourceDetection";
+import { usePipelines } from "../../../../hooks/usePipelines";
+import { UserContext } from "../../../../providers/UserContextProvider";
+import { User, UserPipelinesUpdate, WPUser } from "../../../../types/user";
 import {
   formatIntegrationCount,
   showStoppedIntegrationsWarning,
-} from "../StoppedIntegrationsWarning/StoppedIntegrationsWarning";
+} from "../WPUserItem/StoppedIntegrationsWarning/StoppedIntegrationsWarning";
 
 const SUMMARY_BOARD_COUNT = 5;
 // More added or removed boards than this are counted instead of named.
 const CHANGED_BOARD_NAME_COUNT = 3;
 
 type Props = {
-  user: WPUser;
+  user: User | WPUser;
 };
 
 // Boards to add the user to and remove them from.
@@ -59,7 +63,11 @@ const mergeChanges = (
   };
 };
 
-function WPUserPipelineAccess({ user }: Props) {
+/**
+ * Shows the boards a WordPress user or a QuickTasker user has been added to,
+ * and lets administrators change them.
+ */
+function UserPipelineAccess({ user }: Props) {
   const { pipelines, refreshPipelines } = usePipelines();
   const { detectMissingPipelineResponse } = useMissingResourceDetection();
   const { userDispatch } = useContext(UserContext);
@@ -76,8 +84,10 @@ function WPUserPipelineAccess({ user }: Props) {
   const [editing, setEditing] = useState(false);
   const changeButtonRef = useRef<HTMLButtonElement>(null);
   const wasEditing = useRef(false);
-  const { updateWPUserPipelines } = useWPUserPipelineActions();
-  const selectId = `wp-user-boards-${user.id}`;
+  const { updateUserPipelines } = useUserPipelineActions();
+  // User IDs of the two types can be the same, so the type is part of the IDs.
+  const testIdPrefix = isWPUser(user) ? "wp-user-boards" : "quicktasker-boards";
+  const selectId = `${testIdPrefix}-${user.id}`;
   const userPipelineIdsKey = (user.pipeline_ids ?? []).join(",");
 
   // The user's boards are loaded again when User management is refreshed, and
@@ -115,7 +125,7 @@ function WPUserPipelineAccess({ user }: Props) {
       ]
     : [];
 
-  const warnAboutAssignedTasks = (update: WPUserPipelinesUpdate) => {
+  const warnAboutAssignedTasks = (update: UserPipelinesUpdate) => {
     update.removed_pipelines_with_assigned_tasks.forEach(
       ({ pipeline_id, task_count }) => {
         // The board is added back by a change that is still waiting to be saved.
@@ -204,8 +214,9 @@ function WPUserPipelineAccess({ user }: Props) {
     }
   };
 
-  const warnAboutStoppedIntegrations = (update: WPUserPipelinesUpdate) => {
-    update.stopped_integrations.forEach((integration) => {
+  // Only WordPress users create API tokens, webhooks and automations.
+  const warnAboutStoppedIntegrations = (update: UserPipelinesUpdate) => {
+    (update.stopped_integrations ?? []).forEach((integration) => {
       // The board is added back by a change that is still waiting to be saved.
       if (
         pendingChanges.current?.add.includes(String(integration.pipeline_id))
@@ -244,7 +255,8 @@ function WPUserPipelineAccess({ user }: Props) {
       pendingChanges.current = null;
       const result: { error: unknown } = { error: null };
 
-      await updateWPUserPipelines(
+      await updateUserPipelines(
+        user.user_type,
         user.id,
         changes.add,
         changes.remove,
@@ -258,7 +270,9 @@ function WPUserPipelineAccess({ user }: Props) {
           );
           setSavedIds(savedPipelineIds.current);
           userDispatch({
-            type: SET_WP_USER_PIPELINE_IDS,
+            type: isWPUser(user)
+              ? SET_WP_USER_PIPELINE_IDS
+              : SET_USER_PIPELINE_IDS,
             payload: { userId: user.id, pipelineIds: update.pipeline_ids },
           });
           warnAboutAssignedTasks(update);
@@ -351,13 +365,13 @@ function WPUserPipelineAccess({ user }: Props) {
   // Users who can manage the site, like ones with a custom role that has the
   // manage_options capability, see every board whatever boards they were added
   // to, so there is nothing to change.
-  if (user.can_access_all_pipelines) {
+  if (isWPUser(user) && user.can_access_all_pipelines) {
     return (
-      <div className="wpqt-mt-6 wpqt-mb-2" data-testid="wp-user-boards">
+      <div className="wpqt-mt-6 wpqt-mb-2" data-testid={testIdPrefix}>
         <div className="wpqt-mb-2 wpqt-text-base wpqt-font-semibold">
           {__("Board access", "quicktasker")}
         </div>
-        <div data-testid="wp-user-boards-summary">
+        <div data-testid={`${testIdPrefix}-summary`}>
           {__("All boards", "quicktasker")}
         </div>
         <div className="wpqt-mt-1 wpqt-text-sm wpqt-text-gray-500">
@@ -368,7 +382,7 @@ function WPUserPipelineAccess({ user }: Props) {
   }
 
   return (
-    <div className="wpqt-mt-6 wpqt-mb-2" data-testid="wp-user-boards">
+    <div className="wpqt-mt-6 wpqt-mb-2" data-testid={testIdPrefix}>
       <div className="wpqt-mb-2 wpqt-text-base wpqt-font-semibold">
         {__("Board access", "quicktasker")}
       </div>
@@ -376,13 +390,13 @@ function WPUserPipelineAccess({ user }: Props) {
         {selectedBoardNames.length === 0 ? (
           <span
             className="wpqt-text-yellow-700"
-            data-testid="wp-user-boards-summary"
+            data-testid={`${testIdPrefix}-summary`}
           >
             {__("No boards", "quicktasker")}
           </span>
         ) : (
           <span
-            data-testid="wp-user-boards-summary"
+            data-testid={`${testIdPrefix}-summary`}
             title={
               hiddenBoardCount > 0 ? selectedBoardNames.join(", ") : undefined
             }
@@ -420,7 +434,7 @@ function WPUserPipelineAccess({ user }: Props) {
             trigger={changeLabel}
             triggerClassName={changeClassName}
             ariaLabel={changeAriaLabel}
-            buttonTestId="wp-user-boards-change"
+            buttonTestId={`${testIdPrefix}-change`}
           />
         ) : (
           <span className="wpqt-inline-flex wpqt-items-center wpqt-gap-2">
@@ -429,7 +443,7 @@ function WPUserPipelineAccess({ user }: Props) {
               type="button"
               className={changeClassName}
               aria-label={changeAriaLabel}
-              data-testid="wp-user-boards-change"
+              data-testid={`${testIdPrefix}-change`}
               onClick={() => setEditing(true)}
             >
               {changeLabel}
@@ -438,7 +452,7 @@ function WPUserPipelineAccess({ user }: Props) {
               <span
                 role="status"
                 aria-label={__("Saving boards", "quicktasker")}
-                data-testid="wp-user-boards-saving"
+                data-testid={`${testIdPrefix}-saving`}
               >
                 <LoadingOval width="16" height="16" />
               </span>
@@ -450,4 +464,4 @@ function WPUserPipelineAccess({ user }: Props) {
   );
 }
 
-export { WPUserPipelineAccess };
+export { UserPipelineAccess };
